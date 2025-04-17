@@ -1,0 +1,152 @@
+/* 基础样式 */
+:root {
+    /* 颜色变量 */
+    --macos-blue: #0071e3;
+    --macos-light-blue: #147ce5;
+    --macos-dark-blue: #0068d0;
+    --macos-background: #f5f5f7;
+    --macos-text: #1d1d1f;
+    --macos-secondary-text: #86868b;
+    --macos-border: rgba(0, 0, 0, 0.1);
+    --macos-window-bg: rgba(255, 255, 255, 0.8);
+    --macos-sidebar-bg: rgba(245, 245, 247, 0.8);
+    --macos-menu-bg: rgba(255, 255, 255, 0.8);
+    --macos-dock-bg: rgba(255, 255, 255, 0.2);
+    --macos-control-center-bg: rgba(255, 255, 255, 0.7);
+    
+    /* 暗色模式颜色 */
+    --macos-dark-background: #1e1e1e;
+    --macos-dark-text: #f5f5f7;
+    --macos-dark-secondary-text: #a1a1a6;
+    --macos-dark-border: rgba(255, 255, 255, 0.1);
+    --macos-dark-window-bg: rgba(40, 40, 40, 0.8);
+    --macos-dark-sidebar-bg: rgba(50, 50, 50, 0.8);
+    --macos-dark-menu-bg: rgba(40, 40, 40, 0.8);
+    --macos-dark-dock-bg: rgba(40, 40, 40, 0.2);
+    --macos-dark-control-center-bg: rgba(40, 40, 40, 0.7);
+    
+    /* 字体 */
+    --system-font: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    
+    /* 尺寸 */
+    --menu-bar-height: 24px;
+    --dock-height: 60px;
+    --dock-padding: 6px;
+    --window-border-radius: 10px;
+    --control-border-radius: 6px;
+}
+
+/* 全局重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    font-family: var(--system-font);
+    font-size: 14px;
+    color: var(--macos-text);
+    overflow: hidden;
+    background-color: var(--macos-background);
+}
+
+/* 通用样式 */
+button {
+    font-family: var(--system-font);
+    border: none;
+    background: none;
+    cursor: pointer;
+    outline: none;
+}
+
+input {
+    font-family: var(--system-font);
+    border: none;
+    outline: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* 毛玻璃效果 */
+.blur-bg {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--macos-dark-background);
+        color: var(--macos-dark-text);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    :root {
+        --dock-height: 50px;
+        --menu-bar-height: 20px;
+    }
+    
+    body {
+        font-size: 12px;
+    }
+}
+
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+}

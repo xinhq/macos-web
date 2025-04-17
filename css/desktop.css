@@ -1,0 +1,743 @@
+/* 桌面环境样式 */
+.desktop-screen {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.desktop-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../img/desktop-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+}
+
+/* 顶部菜单栏 */
+.menu-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--menu-bar-height);
+    background-color: var(--macos-menu-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+    z-index: 1000;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.menu-bar-left {
+    display: flex;
+    align-items: center;
+}
+
+.apple-logo {
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.apple-logo svg {
+    fill: var(--macos-text);
+    width: 16px;
+    height: 16px;
+}
+
+.menu-items {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item {
+    padding: 0 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    height: var(--menu-bar-height);
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s ease;
+}
+
+.menu-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.menu-item.active {
+    font-weight: 600;
+}
+
+.menu-bar-right {
+    display: flex;
+    align-items: center;
+}
+
+.menu-bar-icons {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.menu-bar-icon {
+    margin: 0 5px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: var(--macos-text);
+}
+
+.menu-bar-datetime {
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.date {
+    margin-right: 5px;
+}
+
+/* Dock栏 */
+.dock-container {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 900;
+}
+
+.dock {
+    display: flex;
+    align-items: flex-end;
+    background-color: var(--macos-dock-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 18px;
+    padding: var(--dock-padding);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.dock-app {
+    width: var(--dock-height);
+    height: var(--dock-height);
+    margin: 0 4px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.2s ease;
+    transform-origin: bottom;
+}
+
+.dock-app:hover {
+    transform: scale(1.2) translateY(-10px);
+}
+
+.dock-app img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.dock-app::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.dock-app.active::after {
+    opacity: 1;
+}
+
+.dock-divider {
+    width: 1px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 0 6px;
+    align-self: center;
+}
+
+/* 控制中心 */
+.control-center {
+    position: fixed;
+    top: calc(var(--menu-bar-height) + 5px);
+    right: 10px;
+    width: 320px;
+    background-color: var(--macos-control-center-bg);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 950;
+    overflow: hidden;
+    display: none;
+    animation: scaleIn 0.2s ease-out;
+}
+
+.control-center-header {
+    padding: 15px;
+}
+
+.control-center-row {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.control-module {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    flex: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.control-module:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.control-module:last-child {
+    margin-right: 0;
+}
+
+.module-icon {
+    margin-right: 10px;
+}
+
+.module-icon svg {
+    fill: var(--macos-text);
+}
+
+.module-text {
+    flex: 1;
+}
+
+.module-title {
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.module-status {
+    font-size: 12px;
+    color: var(--macos-secondary-text);
+}
+
+.module-toggle {
+    width: 36px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+.module-toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: white;
+    transition: transform 0.2s ease;
+}
+
+.module-toggle.active {
+    background-color: var(--macos-blue);
+}
+
+.module-toggle.active::after {
+    transform: translateX(16px);
+}
+
+.control-center-sliders {
+    padding: 0 15px 15px;
+}
+
+.slider-module {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.slider-icon {
+    margin-right: 15px;
+}
+
+.slider-icon svg {
+    fill: var(--macos-text);
+}
+
+.slider-bar {
+    flex: 1;
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    position: relative;
+}
+
+.slider-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--macos-blue);
+    border-radius: 3px;
+}
+
+.slider-thumb {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.control-center-footer {
+    padding: 15px;
+    display: flex;
+}
+
+/* Launchpad */
+.launchpad {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    z-index: 900;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.launchpad-search {
+    margin-top: 60px;
+    margin-bottom: 30px;
+    width: 300px;
+}
+
+.launchpad-search input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 14px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.launchpad-search input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.launchpad-grid {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 0 50px;
+}
+
+.launchpad-page {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 30px;
+    max-width: 1200px;
+}
+
+.app-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.app-icon:hover {
+    transform: scale(1.1);
+}
+
+.app-icon img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    margin-bottom: 8px;
+    border-radius: 12px;
+}
+
+.app-name {
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.launchpad-dots {
+    margin-bottom: 30px;
+    display: flex;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 0 5px;
+}
+
+.dot.active {
+    background-color: white;
+}
+
+/* 窗口样式 */
+.window {
+    position: absolute;
+    background-color: var(--macos-window-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--window-border-radius);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    display: none;
+    animation: scaleIn 0.3s ease-out;
+    z-index: 800;
+}
+
+.window-header {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--macos-border);
+}
+
+.window-controls {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.control.close {
+    background-color: #ff5f57;
+}
+
+.control.minimize {
+    background-color: #febc2e;
+}
+
+.control.maximize {
+    background-color: #28c840;
+}
+
+.window-title {
+    flex: 1;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.window-actions {
+    display: flex;
+    align-items: center;
+}
+
+.action-button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.action-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.action-button svg {
+    fill: var(--macos-text);
+}
+
+.window-content {
+    display: flex;
+    height: calc(100% - 38px);
+}
+
+/* Finder窗口 */
+.finder-window {
+    width: 800px;
+    height: 500px;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.finder-sidebar {
+    width: 200px;
+    background-color: var(--macos-sidebar-bg);
+    border-right: 1px solid var(--macos-border);
+    padding: 10px 0;
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    margin-bottom: 20px;
+}
+
+.sidebar-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--macos-secondary-text);
+    text-transform: uppercase;
+    padding: 0 10px;
+    margin-bottom: 5px;
+}
+
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 5px;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-item.active {
+    background-color: var(--macos-blue);
+}
+
+.sidebar-item.active .sidebar-label,
+.sidebar-item.active .sidebar-icon svg {
+    color: white;
+    fill: white;
+}
+
+.sidebar-icon {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-icon svg {
+    fill: var(--macos-text);
+}
+
+.sidebar-label {
+    font-size: 13px;
+}
+
+.finder-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.finder-toolbar {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid var(--macos-border);
+}
+
+.toolbar-controls {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.control-button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-right: 5px;
+}
+
+.control-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.control-button svg {
+    fill: var(--macos-text);
+}
+
+.toolbar-path {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 13px;
+}
+
+.path-segment {
+    font-weight: 500;
+}
+
+.finder-files {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.files-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+}
+
+.message-icon {
+    margin-bottom: 15px;
+    color: var(--macos-secondary-text);
+}
+
+.message-title {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.message-description {
+    font-size: 14px;
+    color: var(--macos-secondary-text);
+    max-width: 400px;
+    line-height: 1.5;
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    .menu-bar {
+        background-color: var(--macos-dark-menu-bg);
+    }
+    
+    .apple-logo svg,
+    .menu-bar-icon,
+    .action-button svg,
+    .control-button svg,
+    .module-icon svg,
+    .slider-icon svg {
+        fill: var(--macos-dark-text);
+    }
+    
+    .dock {
+        background-color: var(--macos-dark-dock-bg);
+    }
+    
+    .control-center {
+        background-color: var(--macos-dark-control-center-bg);
+    }
+    
+    .window {
+        background-color: var(--macos-dark-window-bg);
+    }
+    
+    .finder-sidebar {
+        background-color: var(--macos-dark-sidebar-bg);
+        border-right-color: var(--macos-dark-border);
+    }
+    
+    .window-header,
+    .finder-toolbar {
+        border-bottom-color: var(--macos-dark-border);
+    }
+    
+    .sidebar-title,
+    .module-status,
+    .message-icon,
+    .message-description {
+        color: var(--macos-dark-secondary-text);
+    }
+    
+    .sidebar-icon svg {
+        fill: var(--macos-dark-text);
+    }
+    
+    .toolbar-path {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .control-button:hover,
+    .action-button:hover,
+    .sidebar-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .finder-window {
+        width: 95%;
+        height: 80%;
+    }
+    
+    .finder-sidebar {
+        width: 150px;
+    }
+    
+    .launchpad-page {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .app-icon img {
+        width: 50px;
+        height: 50px;
+    }
+}

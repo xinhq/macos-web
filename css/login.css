@@ -1,0 +1,206 @@
+/* 登录界面样式 */
+.login-screen {
+    background-image: url('../img/login-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.login-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+    animation: fadeIn 1s ease-out;
+}
+
+.user-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 60px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.user-name {
+    font-size: 24px;
+    font-weight: 500;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    margin-bottom: 15px;
+}
+
+.login-button {
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    padding: 8px 30px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.login-button:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.login-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.login-footer {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.language-selector {
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 5px 15px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.globe-icon {
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.globe-icon svg {
+    fill: white;
+}
+
+.language-options {
+    display: flex;
+    align-items: center;
+}
+
+.language-options a {
+    color: white;
+    margin: 0 8px;
+    font-size: 14px;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.language-options a:hover {
+    opacity: 1;
+}
+
+.language-options a.active {
+    opacity: 1;
+    font-weight: 500;
+}
+
+.about-macos {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 500px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    display: none;
+    animation: scaleIn 0.3s ease-out;
+}
+
+.about-macos h1 {
+    font-size: 24px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: var(--macos-text);
+}
+
+.about-macos p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    color: var(--macos-text);
+}
+
+/* 深色模式 */
+@media (prefers-color-scheme: dark) {
+    .about-macos {
+        background-color: rgba(40, 40, 40, 0.8);
+    }
+    
+    .about-macos h1,
+    .about-macos p {
+        color: var(--macos-dark-text);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .user-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+    }
+    
+    .user-name {
+        font-size: 20px;
+    }
+    
+    .login-button {
+        font-size: 14px;
+        padding: 6px 25px;
+    }
+    
+    .about-macos {
+        max-width: 90%;
+        padding: 20px;
+    }
+    
+    .about-macos h1 {
+        font-size: 20px;
+    }
+    
+    .about-macos p {
+        font-size: 13px;
+    }
+}
