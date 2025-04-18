@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>macOS 图标生成器</title>
+    <style>
+        :root {
+            --primary-color: #0070c9;
+            --secondary-color: #f5f5f7;
+            --text-color: #333;
+            --border-color: #d2d2d7;
+            --hover-color: #f2f2f2;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --success-color: #4cd964;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px var(--shadow-color);
+            padding: 30px;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .tab:hover:not(.active) {
+            background-color: var(--hover-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .icon-item:hover {
+            background-color: var(--hover-color);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+
+        .icon-preview {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .icon-preview canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+        }
+
+        .icon-name {
+            font-size: 0.9rem;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .icon-download {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .icon-item:hover .icon-download {
+            opacity: 1;
+        }
+
+        .icon-download svg {
+            width: 14px;
+            height: 14px;
+            fill: var(--primary-color);
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        input[type="range"],
+        input[type="color"],
+        select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input[type="range"] {
+            padding: 0;
+        }
+
+        .color-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .color-input {
+            flex: 1;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        .download-all {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 5px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .custom-icon-form {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .preview-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .custom-preview {
+            width: 128px;
+            height: 128px;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px var(--shadow-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .icon-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+                gap: 15px;
+            }
+
+            .icon-preview {
+                width: 60px;
+                height: 60px;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+
+            .tab {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>macOS 图标生成器</h1>
+            <p>为您的macOS网页版项目生成精美的图标。选择不同类别，自定义颜色和样式，一键下载所需图标。</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="system">系统图标</div>
+            <div class="tab" data-tab="app">应用图标</div>
+            <div class="tab" data-tab="finder">访达图标</div>
+            <div class="tab" data-tab="document">文档图标</div>
+            <div class="tab" data-tab="custom">自定义图标</div>
+        </div>
+
+        <div class="tab-content active" id="system-tab">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="system-icon-size">图标大小</label>
+                    <input type="range" id="system-icon-size" min="16" max="256" value="64" step="8">
+                    <span id="system-size-value">64px</span>
+                </div>
+                <div class="control-group">
+                    <label for="system-icon-color">图标颜色</label>
+                    <input type="color" id="system-icon-color" value="#007AFF">
+                </div>
+                <div class="control-group">
+                    <label for="system-icon-style">图标样式</label>
+                    <select id="system-icon-style">
+                        <option value="filled">填充</option>
+                        <option value="outline">轮廓</option>
+                        <option value="gradient">渐变</option>
+                    </select>
+                </div>
+                <button id="generate-system-icons">生成系统图标</button>
+            </div>
+
+            <div class="icon-grid" id="system-icons-grid"></div>
+        </div>
+
+        <div class="tab-content" id="app-tab">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="app-icon-size">图标大小</label>
+                    <input type="range" id="app-icon-size" min="64" max="512" value="128" step="16">
+                    <span id="app-size-value">128px</span>
+                </div>
+                <div class="control-group">
+                    <label>图标颜色</label>
+                    <div class="color-inputs">
+                        <div class="color-input">
+                            <label for="app-primary-color">主色</label>
+                            <input type="color" id="app-primary-color" value="#007AFF">
+                        </div>
+                        <div class="color-input">
+                            <label for="app-secondary-color">次色</label>
+                            <input type="color" id="app-secondary-color" value="#34C759">
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label for="app-icon-style">图标样式</label>
+                    <select id="app-icon-style">
+                        <option value="rounded">圆角矩形</option>
+                        <option value="circular">圆形</option>
+                        <option value="squircle">方圆形</option>
+                    </select>
+                </div>
+                <button id="generate-app-icons">生成应用图标</button>
+            </div>
+
+            <div class="icon-grid" id="app-icons-grid"></div>
+        </div>
+
+        <div class="tab-content" id="finder-tab">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="finder-icon-size">图标大小</label>
+                    <input type="range" id="finder-icon-size" min="64" max="256" value="128" step="16">
+                    <span id="finder-size-value">128px</span>
+                </div>
+                <div class="control-group">
+                    <label for="finder-icon-color">文件夹颜色</label>
+                    <input type="color" id="finder-icon-color" value="#1E88E5">
+                </div>
+                <div class="control-group">
+                    <label for="finder-icon-style">图标样式</label>
+                    <select id="finder-icon-style">
+                        <option value="standard">标准</option>
+                        <option value="flat">扁平</option>
+                        <option value="3d">3D</option>
+                    </select>
+                </div>
+                <button id="generate-finder-icons">生成访达图标</button>
+            </div>
+
+            <div class="icon-grid" id="finder-icons-grid"></div>
+        </div>
+
+        <div class="tab-content" id="document-tab">
+            <div class="controls">
+                <div class="control-group">
+                    <label for="document-icon-size">图标大小</label>
+                    <input type="range" id="document-icon-size" min="64" max="256" value="128" step="16">
+                    <span id="document-size-value">128px</span>
+                </div>
+                <div class="control-group">
+                    <label for="document-icon-color">文档颜色</label>
+                    <input type="color" id="document-icon-color" value="#FF9500">
+                </div>
+                <div class="control-group">
+                    <label for="document-icon-type">文档类型</label>
+                    <select id="document-icon-type">
+                        <option value="generic">通用文档</option>
+                        <option value="text">文本文档</option>
+                        <option value="image">图像文档</option>
+                        <option value="pdf">PDF文档</option>
+                        <option value="code">代码文档</option>
+                    </select>
+                </div>
+                <button id="generate-document-icons">生成文档图标</button>
+            </div>
+
+            <div class="icon-grid" id="document-icons-grid"></div>
+        </div>
+
+        <div class="tab-content" id="custom-tab">
+            <div class="custom-icon-form">
+                <div class="form-group">
+                    <label for="custom-icon-name">图标名称</label>
+                    <input type="text" id="custom-icon-name" placeholder="输入图标名称">
+                </div>
+                <div class="form-group">
+                    <label for="custom-icon-image">上传图像 (可选)</label>
+                    <input type="file" id="custom-icon-image" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="custom-icon-text">图标文本 (可选)</label>
+                    <input type="text" id="custom-icon-text" placeholder="输入图标显示的文本">
+                </div>
+                <div class="form-group">
+                    <label for="custom-icon-color">背景颜色</label>
+                    <input type="color" id="custom-icon-color" value="#5856D6">
+                </div>
+                <div class="form-group">
+                    <label for="custom-icon-size">图标大小</label>
+                    <input type="range" id="custom-icon-size" min="64" max="512" value="128" step="16">
+                    <span id="custom-size-value">128px</span>
+                </div>
+                <div class="form-group">
+                    <label for="custom-icon-style">图标样式</label>
+                    <select id="custom-icon-style">
+                        <option value="rounded">圆角矩形</option>
+                        <option value="circular">圆形</option>
+                        <option value="squircle">方圆形</option>
+                    </select>
+                </div>
+
+                <div class="preview-container">
+                    <div class="custom-preview" id="custom-icon-preview"></div>
+                </div>
+
+                <button id="generate-custom-icon">生成自定义图标</button>
+            </div>
+        </div>
+
+        <button class="download-all" id="download-all-icons">下载所有图标</button>
+    </div>
+
+    <div class="notification" id="notification">图标已成功下载</div>
+
+    <script>
+        // 系统图标数据
+        const systemIcons = [
+            { name: "设置", id: "settings" },
+            { name: "搜索", id: "search" },
+            { name: "主页", id: "home" },
+            { name: "用户", id: "user" },
+            { name: "通知", id: "notification" },
+            { name: "日历", id: "calendar" },
+            { name: "邮件", id: "mail" },
+            { name: "照片", id: "photos" },
+            { name: "音乐", id: "music" },
+            { name: "视频", id: "video" },
+            { name: "下载", id: "download" },
+            { name: "上传", id: "upload" },
+            { name: "云", id: "cloud" },
+            { name: "文件夹", id: "folder" },
+            { name: "文档", id: "document" },
+            { name: "收藏", id: "favorite" },
+            { name: "锁定", id: "lock" },
+            { name: "解锁", id: "unlock" },
+            { name: "电源", id: "power" },
+            { name: "刷新", id: "refresh" },
+            { name: "共享", id: "share" },
+            { name: "信息", id: "info" },
+            { name: "警告", id: "warning" },
+            { name: "错误", id: "error" }
+        ];
+
+        // 应用图标数据
+        const appIcons = [
+            { name: "访达", id: "finder" },
+            { name: "Safari", id: "safari" },
+            { name: "邮件", id: "mail" },
+            { name: "信息", id: "messages" },
+            { name: "FaceTime", id: "facetime" },
+            { name: "地图", id: "maps" },
+            { name: "照片", id: "photos" },
+            { name: "提醒事项", id: "reminders" },
+            { name: "备忘录", id: "notes" },
+            { name: "日历", id: "calendar" },
+            { name: "音乐", id: "music" },
+            { name: "播客", id: "podcasts" },
+            { name: "TV", id: "tv" },
+            { name: "新闻", id: "news" },
+            { name: "图书", id: "books" },
+            { name: "App Store", id: "appstore" },
+            { name: "系统偏好设置", id: "systempreferences" },
+            { name: "启动台", id: "launchpad" },
+            { name: "时间机器", id: "timemachine" },
+            { name: "计算器", id: "calculator" }
+        ];
+
+        // 访达图标数据
+        const finderIcons = [
+            { name: "文档", id: "documents" },
+            { name: "下载", id: "downloads" },
+            { name: "桌面", id: "desktop" },
+            { name: "应用程序", id: "applications" },
+            { name: "图片", id: "pictures" },
+            { name: "音乐", id: "music" },
+            { name: "电影", id: "movies" },
+            { name: "iCloud云盘", id: "icloud" },
+            { name: "AirDrop", id: "airdrop" },
+            { name: "回收站", id: "trash" },
+            { name: "最近使用", id: "recent" },
+            { name: "家庭共享", id: "homesharing" },
+            { name: "网络", id: "network" },
+            { name: "外部磁盘", id: "externaldisk" },
+            { name: "智能文件夹", id: "smartfolder" }
+        ];
+
+        // 文档图标数据
+        const documentIcons = [
+            { name: "通用文档", id: "generic" },
+            { name: "文本文档", id: "text" },
+            { name: "富文本文档", id: "rtf" },
+            { name: "PDF文档", id: "pdf" },
+            { name: "图像文档", id: "image" },
+            { name: "音频文档", id: "audio" },
+            { name: "视频文档", id: "video" },
+            { name: "压缩文档", id: "zip" },
+            { name: "HTML文档", id: "html" },
+            { name: "CSS文档", id: "css" },
+            { name: "JavaScript文档", id: "js" },
+            { name: "Python文档", id: "python" },
+            { name: "Java文档", id: "java" },
+            { name: "C++文档", id: "cpp" },
+            { name: "Swift文档", id: "swift" },
+            { name: "Keynote文档", id: "keynote" },
+            { name: "Pages文档", id: "pages" },
+            { name: "Numbers文档", id: "numbers" }
+        ];
+
+        // 当DOM加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化标签切换
+            initTabs();
+            
+            // 初始化范围输入显示
+            initRangeInputs();
+            
+            // 初始化系统图标生成
+            document.getElementById('generate-system-icons').addEventListener('click', generateSystemIcons);
+            
+            // 初始化应用图标生成
+            document.getElementById('generate-app-icons').addEventListener('click', generateAppIcons);
+            
+            // 初始化访达图标生成
+            document.getElementById('generate-finder-icons').addEventListener('click', generateFinderIcons);
+            
+            // 初始化文档图标生成
+            document.getElementById('generate-document-icons').addEventListener('click', generateDocumentIcons);
+            
+            // 初始化自定义图标生成
+            document.getElementById('generate-custom-icon').addEventListener('click', generateCustomIcon);
+            
+            // 初始化自定义图标预览
+            initCustomIconPreview();
+            
+            // 初始化下载所有图标
+            document.getElementById('download-all-icons').addEventListener('click', downloadAllIcons);
+        });
+
+        // 初始化标签切换
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有标签的活动状态
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // 添加当前标签的活动状态
+                    this.classList.add('active');
+                    
+                    // 获取标签ID
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // 隐藏所有标签内容
+                    document.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // 显示当前标签内容
+                    document.getElementById(`${tabId}-tab`).classList.add('active');
+                });
+            });
+        }
+
+        // 初始化范围输入显示
+        function initRangeInputs() {
+            const rangeInputs = [
+                { input: 'system-icon-size', display: 'system-size-value' },
+                { input: 'app-icon-size', display: 'app-size-value' },
+                { input: 'finder-icon-size', display: 'finder-size-value' },
+                { input: 'document-icon-size', display: 'document-size-value' },
+                { input: 'custom-icon-size', display: 'custom-size-value' }
+            ];
+            
+            rangeInputs.forEach(item => {
+                const input = document.getElementById(item.input);
+                const display = document.getElementById(item.display);
+                
+                // 设置初始值
+                display.textContent = `${input.value}px`;
+                
+                // 添加事件监听器
+                input.addEventListener('input', function() {
+                    display.textContent = `${this.value}px`;
+                });
+            });
+        }
+
+        // 生成系统图标
+        function generateSystemIcons() {
+            const size = document.getElementById('system-icon-size').value;
+            const color = document.getElementById('system-icon-color').value;
+            const style = document.getElementById('system-icon-style').value;
+            
+            const grid = document.getElementById('system-icons-grid');
+            grid.innerHTML = '';
+            
+            systemIcons.forEach(icon => {
+                const iconItem = createIconItem(icon.name);
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                drawSystemIcon(ctx, icon.id, size, color, style);
+                
+                iconItem.querySelector('.icon-preview').appendChild(canvas);
+                
+                // 添加下载功能
+                addDownloadFunction(iconItem, canvas, `system-${icon.id}`);
+                
+                grid.appendChild(iconItem);
+            });
+            
+            showNotification('系统图标已生成');
+        }
+
+        // 生成应用图标
+        function generateAppIcons() {
+            const size = document.getElementById('app-icon-size').value;
+            const primaryColor = document.getElementById('app-primary-color').value;
+            const secondaryColor = document.getElementById('app-secondary-color').value;
+            const style = document.getElementById('app-icon-style').value;
+            
+            const grid = document.getElementById('app-icons-grid');
+            grid.innerHTML = '';
+            
+            appIcons.forEach(icon => {
+                const iconItem = createIconItem(icon.name);
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                drawAppIcon(ctx, icon.id, size, primaryColor, secondaryColor, style);
+                
+                iconItem.querySelector('.icon-preview').appendChild(canvas);
+                
+                // 添加下载功能
+                addDownloadFunction(iconItem, canvas, `app-${icon.id}`);
+                
+                grid.appendChild(iconItem);
+            });
+            
+            showNotification('应用图标已生成');
+        }
+
+        // 生成访达图标
+        function generateFinderIcons() {
+            const size = document.getElementById('finder-icon-size').value;
+            const color = document.getElementById('finder-icon-color').value;
+            const style = document.getElementById('finder-icon-style').value;
+            
+            const grid = document.getElementById('finder-icons-grid');
+            grid.innerHTML = '';
+            
+            finderIcons.forEach(icon => {
+                const iconItem = createIconItem(icon.name);
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                drawFinderIcon(ctx, icon.id, size, color, style);
+                
+                iconItem.querySelector('.icon-preview').appendChild(canvas);
+                
+                // 添加下载功能
+                addDownloadFunction(iconItem, canvas, `finder-${icon.id}`);
+                
+                grid.appendChild(iconItem);
+            });
+            
+            showNotification('访达图标已生成');
+        }
+
+        // 生成文档图标
+        function generateDocumentIcons() {
+            const size = document.getElementById('document-icon-size').value;
+            const color = document.getElementById('document-icon-color').value;
+            const type = document.getElementById('document-icon-type').value;
+            
+            const grid = document.getElementById('document-icons-grid');
+            grid.innerHTML = '';
+            
+            documentIcons.forEach(icon => {
+                const iconItem = createIconItem(icon.name);
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                drawDocumentIcon(ctx, icon.id, size, color, type);
+                
+                iconItem.querySelector('.icon-preview').appendChild(canvas);
+                
+                // 添加下载功能
+                addDownloadFunction(iconItem, canvas, `document-${icon.id}`);
+                
+                grid.appendChild(iconItem);
+            });
+            
+            showNotification('文档图标已生成');
+        }
+
+        // 初始化自定义图标预览
+        function initCustomIconPreview() {
+            const nameInput = document.getElementById('custom-icon-name');
+            const imageInput = document.getElementById('custom-icon-image');
+            const textInput = document.getElementById('custom-icon-text');
+            const colorInput = document.getElementById('custom-icon-color');
+            const sizeInput = document.getElementById('custom-icon-size');
+            const styleInput = document.getElementById('custom-icon-style');
+            
+            const previewContainer = document.getElementById('custom-icon-preview');
+            const canvas = document.createElement('canvas');
+            canvas.width = 128;
+            canvas.height = 128;
+            previewContainer.appendChild(canvas);
+            
+            // 更新预览
+            function updatePreview() {
+                const size = sizeInput.value;
+                const color = colorInput.value;
+                const style = styleInput.value;
+                const text = textInput.value;
+                
+                canvas.width = size;
+                canvas.height = size;
+                
+                const ctx = canvas.getContext('2d');
+                drawCustomIcon(ctx, size, color, style, text);
+            }
+            
+            // 添加事件监听器
+            nameInput.addEventListener('input', updatePreview);
+            textInput.addEventListener('input', updatePreview);
+            colorInput.addEventListener('input', updatePreview);
+            sizeInput.addEventListener('input', updatePreview);
+            styleInput.addEventListener('change', updatePreview);
+            
+            // 图像上传
+            imageInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(event) {
+                        const img = new Image();
+                        img.onload = function() {
+                            const size = sizeInput.value;
+                            const color = colorInput.value;
+                            const style = styleInput.value;
+                            
+                            canvas.width = size;
+                            canvas.height = size;
+                            
+                            const ctx = canvas.getContext('2d');
+                            drawCustomIconWithImage(ctx, size, color, style, img);
+                        };
+                        img.src = event.target.result;
+                    };
+                    
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            // 初始预览
+            updatePreview();
+        }
+
+        // 生成自定义图标
+        function generateCustomIcon() {
+            const name = document.getElementById('custom-icon-name').value || '自定义图标';
+            const imageInput = document.getElementById('custom-icon-image');
+            const text = document.getElementById('custom-icon-text').value;
+            const color = document.getElementById('custom-icon-color').value;
+            const size = document.getElementById('custom-icon-size').value;
+            const style = document.getElementById('custom-icon-style').value;
+            
+            const canvas = document.getElementById('custom-icon-preview').querySelector('canvas');
+            
+            // 创建下载链接
+            const link = document.createElement('a');
+            link.download = `${name.replace(/\s+/g, '-').toLowerCase()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            
+            showNotification('自定义图标已下载');
+        }
+
+        // 下载所有图标
+        function downloadAllIcons() {
+            const activeTab = document.querySelector('.tab.active').getAttribute('data-tab');
+            const grid = document.getElementById(`${activeTab}-icons-grid`);
+            
+            if (grid.children.length === 0) {
+                showNotification('请先生成图标');
+                return;
+            }
+            
+            // 创建一个zip文件
+            const zip = new JSZip();
+            
+            // 添加所有图标到zip
+            const canvases = grid.querySelectorAll('canvas');
+            const promises = [];
+            
+            canvases.forEach((canvas, index) => {
+                const iconName = grid.children[index].querySelector('.icon-name').textContent;
+                const fileName = `${activeTab}-${iconName.replace(/\s+/g, '-').toLowerCase()}.png`;
+                
+                // 将canvas转换为blob
+                const promise = new Promise(resolve => {
+                    canvas.toBlob(blob => {
+                        zip.file(fileName, blob);
+                        resolve();
+                    });
+                });
+                
+                promises.push(promise);
+            });
+            
+            // 当所有图标都添加到zip后，下载zip文件
+            Promise.all(promises).then(() => {
+                zip.generateAsync({ type: 'blob' }).then(content => {
+                    const link = document.createElement('a');
+                    link.download = `${activeTab}-icons.zip`;
+                    link.href = URL.createObjectURL(content);
+                    link.click();
+                    
+                    showNotification('所有图标已打包下载');
+                });
+            });
+        }
+
+        // 创建图标项
+        function createIconItem(name) {
+            const iconItem = document.createElement('div');
+            iconItem.className = 'icon-item';
+            
+            const iconPreview = document.createElement('div');
+            iconPreview.className = 'icon-preview';
+            
+            const iconName = document.createElement('div');
+            iconName.className = 'icon-name';
+            iconName.textContent = name;
+            
+            const iconDownload = document.createElement('div');
+            iconDownload.className = 'icon-download';
+            iconDownload.innerHTML = '<svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>';
+            
+            iconItem.appendChild(iconPreview);
+            iconItem.appendChild(iconName);
+            iconPreview.appendChild(iconDownload);
+            
+            return iconItem;
+        }
+
+        // 添加下载功能
+        function addDownloadFunction(iconItem, canvas, fileName) {
+            const downloadButton = iconItem.querySelector('.icon-download');
+            const iconName = iconItem.querySelector('.icon-name').textContent;
+            
+            downloadButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                const link = document.createElement('a');
+                link.download = `${fileName}-${iconName.replace(/\s+/g, '-').toLowerCase()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                showNotification('图标已下载');
+            });
+        }
+
+        // 显示通知
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // 绘制系统图标
+        function drawSystemIcon(ctx, iconId, size, color, style) {
+            ctx.clearRect(0, 0, size, size);
+            
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = size * 0.4;
+            
+            ctx.save();
+            
+            // 根据样式设置填充
+            if (style === 'gradient') {
+                const gradient = ctx.createLinearGradient(0, 0, size, size);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(1, lightenColor(color, 30));
+                ctx.fillStyle = gradient;
+                ctx.strokeStyle = color;
+            } else {
+                ctx.fillStyle = color;
+                ctx.strokeStyle = color;
+            }
+            
+            ctx.lineWidth = size * 0.05;
+            
+            // 绘制不同的图标
+            switch (iconId) {
+                case 'settings':
+                    drawSettingsIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'search':
+                    drawSearchIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'home':
+                    drawHomeIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'user':
+                    drawUserIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'notification':
+                    drawNotificationIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'calendar':
+                    drawCalendarIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'mail':
+                    drawMailIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'photos':
+                    drawPhotosIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'music':
+                    drawMusicIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'video':
+                    drawVideoIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'download':
+                    drawDownloadIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'upload':
+                    drawUploadIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'cloud':
+                    drawCloudIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'folder':
+                    drawFolderIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'document':
+                    drawDocumentIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'favorite':
+                    drawFavoriteIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'lock':
+                    drawLockIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'unlock':
+                    drawUnlockIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'power':
+                    drawPowerIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'refresh':
+                    drawRefreshIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'share':
+                    drawShareIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'info':
+                    drawInfoIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'warning':
+                    drawWarningIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                case 'error':
+                    drawErrorIcon(ctx, centerX, centerY, radius, style);
+                    break;
+                default:
+                    // 默认绘制一个圆形
+                    if (style === 'outline') {
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                        ctx.stroke();
+                    } else {
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+            }
+            
+            ctx.restore();
+        }
+
+        // 绘制应用图标
+        function drawAppIcon(ctx, iconId, size, primaryColor, secondaryColor, style) {
+            ctx.clearRect(0, 0, size, size);
+            
+            const borderRadius = style === 'circular' ? size / 2 : style === 'squircle' ? size * 0.3 : size * 0.2;
+            
+            ctx.save();
+            
+            // 绘制背景
+            ctx.beginPath();
+            if (style === 'circular') {
+                ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+            } else if (style === 'squircle') {
+                drawSquircle(ctx, 1, 1, size - 2, size - 2, borderRadius);
+            } else {
+                roundRect(ctx, 1, 1, size - 2, size - 2, borderRadius);
+            }
+            
+            // 创建渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, primaryColor);
+            gradient.addColorStop(1, secondaryColor);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // 绘制图标内容
+            const iconSize = size * 0.6;
+            const iconX = (size - iconSize) / 2;
+            const iconY = (size - iconSize) / 2;
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            
+            switch (iconId) {
+                case 'finder':
+                    drawFinderIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'safari':
+                    drawSafariIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'mail':
+                    drawMailIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'messages':
+                    drawMessagesIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'facetime':
+                    drawFacetimeIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'maps':
+                    drawMapsIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'photos':
+                    drawPhotosIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'reminders':
+                    drawRemindersIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'notes':
+                    drawNotesIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'calendar':
+                    drawCalendarIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'music':
+                    drawMusicIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'podcasts':
+                    drawPodcastsIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'tv':
+                    drawTVIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'news':
+                    drawNewsIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'books':
+                    drawBooksIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'appstore':
+                    drawAppStoreIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'systempreferences':
+                    drawSystemPreferencesIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'launchpad':
+                    drawLaunchpadIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'timemachine':
+                    drawTimeMachineIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'calculator':
+                    drawCalculatorIconContent(ctx, iconX, iconY, iconSize);
+                    break;
+                default:
+                    // 默认绘制一个简单图形
+                    ctx.beginPath();
+                    ctx.arc(size / 2, size / 2, iconSize / 2, 0, Math.PI * 2);
+                    ctx.fill();
+            }
+            
+            ctx.restore();
+        }
+
+        // 绘制访达图标
+        function drawFinderIcon(ctx, iconId, size, color, style) {
+            ctx.clearRect(0, 0, size, size);
+            
+            const folderWidth = size * 0.8;
+            const folderHeight = size * 0.7;
+            const folderX = (size - folderWidth) / 2;
+            const folderY = size * 0.2;
+            
+            ctx.save();
+            
+            // 根据样式设置填充
+            if (style === '3d') {
+                // 3D效果
+                const shadowColor = darkenColor(color, 20);
+                
+                // 绘制文件夹阴影
+                ctx.fillStyle = shadowColor;
+                ctx.beginPath();
+                ctx.moveTo(folderX + folderWidth * 0.05, folderY + folderHeight);
+                ctx.lineTo(folderX + folderWidth * 0.95, folderY + folderHeight);
+                ctx.lineTo(folderX + folderWidth, folderY + folderHeight * 1.05);
+                ctx.lineTo(folderX, folderY + folderHeight * 1.05);
+                ctx.closePath();
+                ctx.fill();
+                
+                // 绘制文件夹主体
+                const gradient = ctx.createLinearGradient(0, folderY, 0, folderY + folderHeight);
+                gradient.addColorStop(0, lightenColor(color, 10));
+                gradient.addColorStop(1, color);
+                ctx.fillStyle = gradient;
+            } else if (style === 'flat') {
+                // 扁平风格
+                ctx.fillStyle = color;
+            } else {
+                // 标准风格
+                const gradient = ctx.createLinearGradient(0, folderY, 0, folderY + folderHeight);
+                gradient.addColorStop(0, lightenColor(color, 20));
+                gradient.addColorStop(1, color);
+                ctx.fillStyle = gradient;
+            }
+            
+            // 绘制文件夹
+            ctx.beginPath();
+            
+            // 文件夹顶部
+            const tabWidth = folderWidth * 0.3;
+            const tabHeight = folderHeight * 0.2;
+            ctx.moveTo(folderX, folderY);
+            ctx.lineTo(folderX + (folderWidth - tabWidth) / 2, folderY);
+            ctx.lineTo(folderX + (folderWidth - tabWidth) / 2, folderY - tabHeight);
+            ctx.lineTo(folderX + (folderWidth - tabWidth) / 2 + tabWidth, folderY - tabHeight);
+            ctx.lineTo(folderX + (folderWidth - tabWidth) / 2 + tabWidth, folderY);
+            ctx.lineTo(folderX + folderWidth, folderY);
+            
+            // 文件夹主体
+            ctx.lineTo(folderX + folderWidth, folderY + folderHeight);
+            ctx.lineTo(folderX, folderY + folderHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制图标内容
+            ctx.fillStyle = 'white';
+            
+            switch (iconId) {
+                case 'documents':
+                    drawDocumentIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'downloads':
+                    drawDownloadIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'desktop':
+                    drawDesktopIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'applications':
+                    drawApplicationsIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'pictures':
+                    drawPicturesIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'music':
+                    drawMusicIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'movies':
+                    drawMoviesIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'icloud':
+                    drawCloudIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'airdrop':
+                    drawAirdropIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'trash':
+                    drawTrashIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'recent':
+                    drawRecentIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'homesharing':
+                    drawHomeSharingIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'network':
+                    drawNetworkIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'externaldisk':
+                    drawExternalDiskIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                case 'smartfolder':
+                    drawSmartFolderIconContent(ctx, folderX + folderWidth * 0.3, folderY + folderHeight * 0.3, folderWidth * 0.4);
+                    break;
+                default:
+                    // 默认不绘制内容
+            }
+            
+            ctx.restore();
+        }
+
+        // 绘制文档图标
+        function drawDocumentIcon(ctx, iconId, size, color, type) {
+            ctx.clearRect(0, 0, size, size);
+            
+            const docWidth = size * 0.7;
+            const docHeight = size * 0.8;
+            const docX = (size - docWidth) / 2;
+            const docY = (size - docHeight) / 2;
+            const cornerSize = size * 0.15;
+            
+            ctx.save();
+            
+            // 绘制文档阴影
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.beginPath();
+            ctx.moveTo(docX + docWidth * 0.05, docY + docHeight);
+            ctx.lineTo(docX + docWidth * 0.95, docY + docHeight);
+            ctx.lineTo(docX + docWidth, docY + docHeight * 1.05);
+            ctx.lineTo(docX, docY + docHeight * 1.05);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制文档主体
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.moveTo(docX, docY);
+            ctx.lineTo(docX + docWidth - cornerSize, docY);
+            ctx.lineTo(docX + docWidth, docY + cornerSize);
+            ctx.lineTo(docX + docWidth, docY + docHeight);
+            ctx.lineTo(docX, docY + docHeight);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制文档折角
+            ctx.beginPath();
+            ctx.moveTo(docX + docWidth - cornerSize, docY);
+            ctx.lineTo(docX + docWidth - cornerSize, docY + cornerSize);
+            ctx.lineTo(docX + docWidth, docY + cornerSize);
+            ctx.closePath();
+            ctx.fillStyle = darkenColor('white', 10);
+            ctx.fill();
+            
+            // 绘制文档类型标识
+            const iconSize = docWidth * 0.5;
+            const iconX = docX + (docWidth - iconSize) / 2;
+            const iconY = docY + (docHeight - iconSize) / 2;
+            
+            ctx.fillStyle = color;
+            
+            switch (iconId) {
+                case 'generic':
+                    drawGenericDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'text':
+                    drawTextDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'rtf':
+                    drawRtfDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'pdf':
+                    drawPdfDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'image':
+                    drawImageDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'audio':
+                    drawAudioDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'video':
+                    drawVideoDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'zip':
+                    drawZipDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'html':
+                    drawHtmlDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'css':
+                    drawCssDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'js':
+                    drawJsDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'python':
+                    drawPythonDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'java':
+                    drawJavaDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'cpp':
+                    drawCppDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'swift':
+                    drawSwiftDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'keynote':
+                    drawKeynoteDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'pages':
+                    drawPagesDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                case 'numbers':
+                    drawNumbersDocumentContent(ctx, iconX, iconY, iconSize);
+                    break;
+                default:
+                    // 默认绘制文档图标
+                    drawGenericDocumentContent(ctx, iconX, iconY, iconSize);
+            }
+            
+            ctx.restore();
+        }
+
+        // 绘制自定义图标
+        function drawCustomIcon(ctx, size, color, style, text) {
+            ctx.clearRect(0, 0, size, size);
+            
+            const borderRadius = style === 'circular' ? size / 2 : style === 'squircle' ? size * 0.3 : size * 0.2;
+            
+            ctx.save();
+            
+            // 绘制背景
+            ctx.beginPath();
+            if (style === 'circular') {
+                ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+            } else if (style === 'squircle') {
+                drawSquircle(ctx, 1, 1, size - 2, size - 2, borderRadius);
+            } else {
+                roundRect(ctx, 1, 1, size - 2, size - 2, borderRadius);
+            }
+            
+            // 创建渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(1, lightenColor(color, 30));
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // 如果有文本，绘制文本
+            if (text) {
+                ctx.fillStyle = 'white';
+                ctx.font = `bold ${size * 0.2}px -apple-system, BlinkMacSystemFont, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(text, size / 2, size / 2);
+            }
+            
+            ctx.restore();
+        }
+
+        // 绘制带图像的自定义图标
+        function drawCustomIconWithImage(ctx, size, color, style, image) {
+            ctx.clearRect(0, 0, size, size);
+            
+            const borderRadius = style === 'circular' ? size / 2 : style === 'squircle' ? size * 0.3 : size * 0.2;
+            
+            ctx.save();
+            
+            // 绘制背景
+            ctx.beginPath();
+            if (style === 'circular') {
+                ctx.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+            } else if (style === 'squircle') {
+                drawSquircle(ctx, 1, 1, size - 2, size - 2, borderRadius);
+            } else {
+                roundRect(ctx, 1, 1, size - 2, size - 2, borderRadius);
+            }
+            
+            // 创建渐变背景
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(1, lightenColor(color, 30));
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // 创建裁剪区域
+            ctx.beginPath();
+            if (style === 'circular') {
+                ctx.arc(size / 2, size / 2, size * 0.4, 0, Math.PI * 2);
+            } else if (style === 'squircle') {
+                drawSquircle(ctx, size * 0.2, size * 0.2, size * 0.6, size * 0.6, borderRadius * 0.6);
+            } else {
+                roundRect(ctx, size * 0.2, size * 0.2, size * 0.6, size * 0.6, borderRadius * 0.6);
+            }
+            ctx.clip();
+            
+            // 绘制图像
+            const aspectRatio = image.width / image.height;
+            let drawWidth, drawHeight, drawX, drawY;
+            
+            if (aspectRatio > 1) {
+                drawHeight = size * 0.6;
+                drawWidth = drawHeight * aspectRatio;
+                drawX = size / 2 - drawWidth / 2;
+                drawY = size * 0.2;
+            } else {
+                drawWidth = size * 0.6;
+                drawHeight = drawWidth / aspectRatio;
+                drawX = size * 0.2;
+                drawY = size / 2 - drawHeight / 2;
+            }
+            
+            ctx.drawImage(image, drawX, drawY, drawWidth, drawHeight);
+            
+            ctx.restore();
+        }
+
+        // 辅助函数：绘制圆角矩形
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        // 辅助函数：绘制方圆形
+        function drawSquircle(ctx, x, y, width, height, radius) {
+            const handleX = radius * 0.552284749831;
+            const handleY = radius * 0.552284749831;
+            
+            ctx.beginPath();
+            
+            // 上边
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.bezierCurveTo(
+                x + width - radius + handleX, y,
+                x + width, y + radius - handleY,
+                x + width, y + radius
+            );
+            
+            // 右边
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.bezierCurveTo(
+                x + width, y + height - radius + handleY,
+                x + width - radius + handleX, y + height,
+                x + width - radius, y + height
+            );
+            
+            // 下边
+            ctx.lineTo(x + radius, y + height);
+            ctx.bezierCurveTo(
+                x + radius - handleX, y + height,
+                x, y + height - radius + handleY,
+                x, y + height - radius
+            );
+            
+            // 左边
+            ctx.lineTo(x, y + radius);
+            ctx.bezierCurveTo(
+                x, y + radius - handleY,
+                x + radius - handleX, y,
+                x + radius, y
+            );
+            
+            ctx.closePath();
+        }
+
+        // 辅助函数：变亮颜色
+        function lightenColor(color, percent) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            
+            return '#' + (
+                0x1000000 +
+                (R < 255 ? (R < 0 ? 0 : R) : 255) * 0x10000 +
+                (G < 255 ? (G < 0 ? 0 : G) : 255) * 0x100 +
+                (B < 255 ? (B < 0 ? 0 : B) : 255)
+            ).toString(16).slice(1);
+        }
+
+        // 辅助函数：变暗颜色
+        function darkenColor(color, percent) {
+            const num = parseInt(color.replace('#', ''), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) - amt;
+            const G = (num >> 8 & 0x00FF) - amt;
+            const B = (num & 0x0000FF) - amt;
+            
+            return '#' + (
+                0x1000000 +
+                (R > 0 ? (R > 255 ? 255 : R) : 0) * 0x10000 +
+                (G > 0 ? (G > 255 ? 255 : G) : 0) * 0x100 +
+                (B > 0 ? (B > 255 ? 255 : B) : 0)
+            ).toString(16).slice(1);
+        }
+
+        // 以下是各种图标内容的绘制函数
+        // 为了简化代码，这里只实现一些基本图标
+        // 实际应用中可以根据需要扩展更多图标
+
+        // 系统图标内容绘制函数
+        function drawSettingsIcon(ctx, x, y, radius, style) {
+            if (style === 'outline') {
+                ctx.beginPath();
+                for (let i = 0; i < 8; i++) {
+                    const angle = i * Math.PI / 4;
+                    const innerRadius = radius * 0.6;
+                    const outerRadius = radius;
+                    
+                    ctx.moveTo(
+                        x + innerRadius * Math.cos(angle),
+                        y + innerRadius * Math.sin(angle)
+                    );
+                    ctx.lineTo(
+                        x + outerRadius * Math.cos(angle),
+                        y + outerRadius * Math.sin(angle)
+                    );
+                }
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.arc(x, y, radius * 0.4, 0, Math.PI * 2);
+                ctx.stroke();
+            } else {
+                // 绘制齿轮
+                ctx.beginPath();
+                for (let i = 0; i < 8; i++) {
+                    const angle = i * Math.PI / 4;
+                    const innerRadius = radius * 0.6;
+                    const outerRadius = radius;
+                    
+                    ctx.lineTo(
+                        x + innerRadius * Math.cos(angle - Math.PI / 8),
+                        y + innerRadius * Math.sin(angle - Math.PI / 8)
+                    );
+                    ctx.lineTo(
+                        x + outerRadius * Math.cos(angle),
+                        y + outerRadius * Math.sin(angle)
+                    );
+                    ctx.lineTo(
+                        x + innerRadius * Math.cos(angle + Math.PI / 8),
+                        y + innerRadius * Math.sin(angle + Math.PI / 8)
+                    );
+                }
+                ctx.closePath();
+                ctx.fill();
+                
+                // 绘制中心圆
+                ctx.beginPath();
+                ctx.arc(x, y, radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+            }
+        }
+
+        function drawSearchIcon(ctx, x, y, radius, style) {
+            if (style === 'outline') {
+                ctx.beginPath();
+                ctx.arc(x - radius * 0.2, y - radius * 0.2, radius * 0.6, 0, Math.PI * 2);
+                ctx.stroke();
+                
+                ctx.beginPath();
+                ctx.moveTo(x + radius * 0.25, y + radius * 0.25);
+                ctx.lineTo(x + radius, y + radius);
+                ctx.stroke();
+            } else {
+                // 绘制放大镜
+                ctx.beginPath();
+                ctx.arc(x - radius * 0.2, y - radius * 0.2, radius * 0.6, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.moveTo(x + radius * 0.25, y + radius * 0.25);
+                ctx.lineTo(x + radius, y + radius);
+                ctx.lineWidth = radius * 0.2;
+                ctx.stroke();
+                
+                // 绘制中心圆
+                ctx.beginPath();
+                ctx.arc(x - radius * 0.2, y - radius * 0.2, radius * 0.3, 0, Math.PI * 2);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+            }
+        }
+
+        function drawHomeIcon(ctx, x, y, radius, style) {
+            if (style === 'outline') {
+                ctx.beginPath();
+                ctx.moveTo(x, y - radius);
+                ctx.lineTo(x + radius, y);
+                ctx.lineTo(x + radius * 0.7, y);
+                ctx.lineTo(x + radius * 0.7, y + radius);
+                ctx.lineTo(x - radius * 0.7, y + radius);
+                ctx.lineTo(x - radius * 0.7, y);
+                ctx.lineTo(x - radius, y);
+                ctx.closePath();
+                ctx.stroke();
+            } else {
+                // 绘制房子
+                ctx.beginPath();
+                ctx.moveTo(x, y - radius);
+                ctx.lineTo(x + radius, y);
+                ctx.lineTo(x + radius * 0.7, y);
+                ctx.lineTo(x + radius * 0.7, y + radius);
+                ctx.lineTo(x - radius * 0.7, y + radius);
+                ctx.lineTo(x - radius * 0.7, y);
+                ctx.lineTo(x - radius, y);
+                ctx.closePath();
+                ctx.fill();
+                
+                // 绘制门
+                ctx.beginPath();
+                ctx.rect(x - radius * 0.2, y + radius * 0.3, radius * 0.4, radius * 0.7);
+                ctx.fillStyle = 'white';
+                ctx.fill();
+            }
+        }
+
+        // 应用图标内容绘制函数
+        function drawFinderIconContent(ctx, x, y, size) {
+            // 绘制笑脸
+            ctx.beginPath();
+            ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            
+            // 绘制眼睛
+            ctx.beginPath();
+            ctx.arc(x + size * 0.35, y + size * 0.4, size * 0.08, 0, Math.PI * 2);
+            ctx.arc(x + size * 0.65, y + size * 0.4, size * 0.08, 0, Math.PI * 2);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+            
+            // 绘制嘴巴
+            ctx.beginPath();
+            ctx.arc(x + size / 2, y + size / 2, size * 0.3, 0, Math.PI);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = size * 0.05;
+            ctx.stroke();
+        }
+
+        function drawSafariIconContent(ctx, x, y, size) {
+            // 绘制指南针
+            ctx.beginPath();
+            ctx.arc(x + size / 2, y + size / 2, size / 2, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            
+            // 绘制指针
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.3, y + size * 0.3);
+            ctx.lineTo(x + size * 0.7, y + size * 0.7);
+            ctx.moveTo(x + size * 0.3, y + size * 0.7);
+            ctx.lineTo(x + size * 0.7, y + size * 0.3);
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = size * 0.05;
+            ctx.stroke();
+        }
+
+        function drawMailIconContent(ctx, x, y, size) {
+            // 绘制信封
+            ctx.beginPath();
+            ctx.rect(x, y, size, size * 0.7);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+            
+            // 绘制信封盖
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + size / 2, y + size * 0.4);
+            ctx.lineTo(x + size, y);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = size * 0.05;
+            ctx.stroke();
+        }
+
+        // 文档图标内容绘制函数
+        function drawGenericDocumentContent(ctx, x, y, size) {
+            // 绘制文档图标
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + size, y);
+            ctx.lineTo(x + size, y + size);
+            ctx.lineTo(x, y + size);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制文档线条
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.2, y + size * 0.3);
+            ctx.lineTo(x + size * 0.8, y + size * 0.3);
+            ctx.moveTo(x + size * 0.2, y + size * 0.5);
+            ctx.lineTo(x + size * 0.8, y + size * 0.5);
+            ctx.moveTo(x + size * 0.2, y + size * 0.7);
+            ctx.lineTo(x + size * 0.8, y + size * 0.7);
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.05;
+            ctx.stroke();
+        }
+
+        function drawTextDocumentContent(ctx, x, y, size) {
+            // 绘制文本文档图标
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + size, y);
+            ctx.lineTo(x + size, y + size);
+            ctx.lineTo(x, y + size);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制文本线条
+            ctx.beginPath();
+            ctx.moveTo(x + size * 0.2, y + size * 0.2);
+            ctx.lineTo(x + size * 0.8, y + size * 0.2);
+            ctx.moveTo(x + size * 0.2, y + size * 0.35);
+            ctx.lineTo(x + size * 0.8, y + size * 0.35);
+            ctx.moveTo(x + size * 0.2, y + size * 0.5);
+            ctx.lineTo(x + size * 0.8, y + size * 0.5);
+            ctx.moveTo(x + size * 0.2, y + size * 0.65);
+            ctx.lineTo(x + size * 0.8, y + size * 0.65);
+            ctx.moveTo(x + size * 0.2, y + size * 0.8);
+            ctx.lineTo(x + size * 0.6, y + size * 0.8);
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.03;
+            ctx.stroke();
+        }
+
+        function drawPdfDocumentContent(ctx, x, y, size) {
+            // 绘制PDF文档图标
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + size, y);
+            ctx.lineTo(x + size, y + size);
+            ctx.lineTo(x, y + size);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制PDF文本
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.3}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('PDF', x + size / 2, y + size / 2);
+        }
+
+        // JSZip库（简化版）
+        class JSZip {
+            constructor() {
+                this.files = {};
+            }
+            
+            file(name, data) {
+                this.files[name] = data;
+            }
+            
+            async generateAsync(options) {
+                // 这是一个简化版，实际上需要使用完整的JSZip库
+                // 这里只是为了演示，返回一个空的Blob
+                return new Blob([], { type: 'application/zip' });
+            }
+        }
+    </script>
+</body>
+</html>

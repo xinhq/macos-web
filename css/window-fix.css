@@ -1,0 +1,9 @@
+.finder-window, #launchpad {
+    display: none; /* 默认隐藏访达窗口和启动台 */
+}
+
+.finder-window.show {
+    display: flex; /* 当添加show类时显示访达窗口 */
+}
+
+/* 其他窗口样式保持不变 */

@@ -1,0 +1,289 @@
+/* animations.css - 动画效果样式 */
+
+/* 基础动画效果 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scaleOut {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.9); opacity: 0; }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Dock动画效果 */
+@keyframes dock-bounce {
+    0%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-15px); }
+    80% { transform: translateY(-5px); }
+}
+
+.dock-app.bounce {
+    animation: dock-bounce 0.5s ease;
+}
+
+/* Dock悬停放大效果 */
+.dock-magnify .dock-app {
+    transition: transform 0.1s ease;
+}
+
+/* 窗口动画效果 */
+@keyframes window-open {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+.window.opening {
+    animation: window-open 0.3s ease forwards;
+}
+
+@keyframes window-close {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.95); opacity: 0; }
+}
+
+.window.closing {
+    animation: window-close 0.2s ease forwards;
+}
+
+@keyframes window-minimize {
+    from { transform: scale(1); opacity: 1; }
+    to { transform: scale(0.1) translateY(500px); opacity: 0; }
+}
+
+.window.minimizing {
+    animation: window-minimize 0.3s ease forwards;
+}
+
+/* 菜单动画效果 */
+@keyframes menu-open {
+    from { transform: translateY(-5px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.dropdown-menu.show {
+    animation: menu-open 0.2s ease forwards;
+}
+
+/* 控制中心动画效果 */
+@keyframes control-center-open {
+    from { transform: translateY(-10px) scale(0.95); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.control-center.show {
+    animation: control-center-open 0.25s ease forwards;
+}
+
+/* Launchpad动画效果 */
+@keyframes launchpad-open {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.launchpad.show {
+    animation: launchpad-open 0.3s ease forwards;
+}
+
+@keyframes launchpad-close {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.launchpad.closing {
+    animation: launchpad-close 0.2s ease forwards;
+}
+
+/* 应用启动动画 */
+@keyframes app-launch {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.app-icon.launching img {
+    animation: app-launch 0.3s ease forwards;
+}
+
+/* 通知动画效果 */
+@keyframes notification-in {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.notification.show {
+    animation: notification-in 0.3s ease forwards;
+}
+
+@keyframes notification-out {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+.notification.hiding {
+    animation: notification-out 0.3s ease forwards;
+}
+
+/* 按钮点击效果 */
+@keyframes button-click {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+.button-click {
+    animation: button-click 0.2s ease;
+}
+
+/* 加载动画效果 */
+@keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spinner 0.8s linear infinite;
+}
+
+/* 进度条动画 */
+@keyframes progress {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+.progress-bar {
+    height: 4px;
+    background-color: var(--macos-blue);
+    animation: progress 2s linear forwards;
+}
+
+/* 壁纸切换动画 */
+@keyframes wallpaper-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.desktop-background.changing {
+    animation: wallpaper-fade 1s ease forwards;
+}
+
+/* 深色模式切换动画 */
+@keyframes theme-transition {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+body.theme-transitioning {
+    animation: theme-transition 0.5s ease;
+}
+
+/* 拖拽动画效果 */
+.dragging {
+    opacity: 0.7 !important;
+    transform: scale(1.05) !important;
+    transition: none !important;
+    z-index: 1000 !important;
+}
+
+/* 悬停效果 */
+.hover-effect {
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-medium);
+}
+
+/* 点击波纹效果 */
+.ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple::after {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 10.01%);
+    background-repeat: no-repeat;
+    background-position: 50%;
+    transform: scale(10, 10);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s;
+}
+
+.ripple:active::after {
+    transform: scale(0, 0);
+    opacity: 0.3;
+    transition: 0s;
+}
+
+/* 页面过渡动画 */
+.page-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease;
+}
+
+.page-transition.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 响应式动画调整 */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}

@@ -3,45 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>macOS Monterey 网页版</title>
+    <title>macOS 网页版 - 登录</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/login.css">
-    <meta name="description" content="macOS Monterey 网页版，在线体验macOS系统">
 </head>
 <body class="login-screen">
+    <!-- 登录背景 -->
+    <div class="login-background"></div>
+    
+    <!-- 登录容器 -->
     <div class="login-container">
-        <div class="login-user">
-            <div class="user-avatar">
-                <img src="img/default-avatar.png" alt="用户头像">
-            </div>
-            <div class="user-name">访客用户</div>
-            <button class="login-button" id="login-btn">登录</button>
+        <!-- 顶部时间和日期 -->
+        <div class="login-datetime">
+            <div class="login-time" id="login-time">00:00</div>
+            <div class="login-date" id="login-date">星期一, 1月1日</div>
         </div>
         
+        <!-- 用户信息和登录按钮 -->
+        <div class="login-user-container">
+            <div class="user-avatar">
+                <img src="img/default-avatar.png" alt="用户头像" id="user-avatar">
+            </div>
+            <div class="user-name" id="user-name">访客用户</div>
+            <div class="password-field">
+                <input type="password" id="password-input" placeholder="输入密码">
+            </div>
+            <div class="login-button-container">
+                <button class="login-button" id="login-button">
+                    <span class="arrow-icon">→</span>
+                </button>
+            </div>
+            <div class="login-hint" id="login-hint">提示：任意密码均可登录</div>
+        </div>
+        
+        <!-- 底部控制栏 -->
         <div class="login-footer">
-            <div class="language-selector">
-                <div class="globe-icon">
-                    <svg viewBox="0 0 24 24" width="16" height="16">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
-                    </svg>
-                </div>
-                <div class="language-options">
-                    <a href="#" class="active">简体中文</a>
-                    <a href="#">繁體中文</a>
-                    <a href="#">English</a>
-                </div>
+            <div class="footer-left">
+                <button class="icon-button sleep-button" title="睡眠">
+                    <span class="icon">⏾</span>
+                </button>
+                <button class="icon-button restart-button" title="重新启动">
+                    <span class="icon">⟳</span>
+                </button>
+                <button class="icon-button shutdown-button" title="关机">
+                    <span class="icon">⏻</span>
+                </button>
+            </div>
+            <div class="footer-right">
+                <button class="text-button accessibility-button" title="辅助功能选项">
+                    <span class="icon">♿</span>
+                </button>
+                <button class="text-button language-button" id="language-button" title="语言选择">
+                    <span class="icon">🌐</span>
+                    <span class="text">简体中文</span>
+                </button>
             </div>
         </div>
     </div>
-
-    <div class="about-macos">
-        <h1>macOS Monterey 网页版</h1>
-        <p>macOS Monterey 网页版是一个开源项目，旨在提供用户在线体验macOS系统的机会。</p>
-        <p>本项目使用HTML、CSS和JavaScript等标准网络技术构建。</p>
-        <p>这不是苹果公司的官方产品，仅用于学习和展示目的。</p>
-        <p>Apple、macOS和其他在本项目中展示的产品是Apple Inc.的商标。</p>
+    
+    <!-- 关于本机对话框 -->
+    <div class="about-dialog" id="about-dialog">
+        <div class="about-dialog-content">
+            <div class="about-header">
+                <img src="icons/system/apple-logo.svg" alt="Apple Logo" class="about-logo">
+                <h2>macOS 网页版</h2>
+            </div>
+            <div class="about-info">
+                <p>版本 1.0 (基于 macOS Monterey)</p>
+                <p>© 2025 Web OS Project</p>
+                <p>使用HTML, CSS和JavaScript构建</p>
+            </div>
+            <button class="about-close-button" id="about-close-button">关闭</button>
+        </div>
     </div>
-
+    
+    <!-- 语言选择菜单 -->
+    <div class="language-menu" id="language-menu">
+        <ul>
+            <li data-lang="zh-CN" class="selected">简体中文</li>
+            <li data-lang="en-US">English (US)</li>
+            <li data-lang="ja-JP">日本語</li>
+            <li data-lang="ko-KR">한국어</li>
+        </ul>
+    </div>
+    
     <script src="js/login.js"></script>
 </body>
 </html>

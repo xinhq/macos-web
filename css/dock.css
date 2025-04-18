@@ -1,0 +1,175 @@
+/* dock.css - Dock栏样式 */
+
+/* Dock容器 */
+.dock-container {
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    z-index: 900;
+}
+
+.dock {
+    display: flex;
+    align-items: flex-end;
+    background-color: var(--macos-dock-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 18px;
+    padding: var(--dock-padding);
+    box-shadow: var(--shadow-medium);
+    transition: transform var(--transition-normal);
+}
+
+/* Dock应用图标 */
+.dock-app {
+    width: var(--dock-height);
+    height: var(--dock-height);
+    margin: 0 4px;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.2s ease;
+    transform-origin: bottom;
+}
+
+.dock-app:hover {
+    transform: scale(1.2) translateY(-10px);
+}
+
+.dock-app.bounce {
+    animation: dock-bounce 0.5s ease;
+}
+
+.dock-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Dock分隔线 */
+.dock-divider {
+    width: 1px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 0 5px;
+    align-self: center;
+}
+
+/* Dock指示器（显示应用正在运行） */
+.dock-indicator {
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.dock-app.active .dock-indicator {
+    opacity: 1;
+}
+
+/* Dock应用启动动画 */
+@keyframes dock-bounce {
+    0%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-20px); }
+    60% { transform: translateY(-15px); }
+    80% { transform: translateY(-5px); }
+}
+
+/* Dock应用拖拽样式 */
+.dock-app.dragging {
+    opacity: 0.7;
+    transform: scale(1.1);
+}
+
+.dock-app.drag-over {
+    transform: translateX(5px);
+}
+
+/* Dock提示框 */
+.dock-tooltip {
+    position: absolute;
+    bottom: calc(var(--dock-height) + 20px);
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--macos-menu-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 12px;
+    white-space: nowrap;
+    box-shadow: var(--shadow-small);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-fast), visibility var(--transition-fast);
+    pointer-events: none;
+}
+
+.dock-app:hover .dock-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Dock应用打开动画 */
+@keyframes app-open {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Dock响应式设计 */
+@media only screen and (max-width: 768px) {
+    .dock {
+        border-radius: 15px;
+        padding: 4px;
+    }
+    
+    .dock-app {
+        margin: 0 2px;
+    }
+    
+    .dock-divider {
+        height: 30px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .dock-container {
+        bottom: 5px;
+    }
+    
+    .dock {
+        overflow-x: auto;
+        max-width: 95%;
+        justify-content: flex-start;
+        scrollbar-width: none;
+    }
+    
+    .dock::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* Dock隐藏/显示动画 */
+.dock.hide {
+    transform: translateY(100px);
+}
+
+/* Dock悬停放大效果 - 高级版 */
+.dock.magnify .dock-app {
+    transition: transform 0.1s ease;
+}
+
+.dock.magnify:hover .dock-app {
+    transform: scale(1);
+}
+
+/* 这个效果会在JavaScript中动态计算，这里只是基础样式 */

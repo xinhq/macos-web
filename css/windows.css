@@ -1,0 +1,316 @@
+/* windows.css - 窗口系统样式 */
+
+/* 窗口基础样式 */
+.window {
+    position: absolute;
+    background-color: var(--macos-window-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: var(--window-border-radius);
+    box-shadow: var(--shadow-large);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+    z-index: 100;
+    min-width: 400px;
+    min-height: 300px;
+}
+
+/* 窗口打开动画 */
+.window.opening {
+    animation: window-open 0.3s ease forwards;
+}
+
+@keyframes window-open {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* 窗口关闭动画 */
+.window.closing {
+    animation: window-close 0.2s ease forwards;
+}
+
+@keyframes window-close {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+}
+
+/* 窗口最小化动画 */
+.window.minimizing {
+    animation: window-minimize 0.3s ease forwards;
+}
+
+@keyframes window-minimize {
+    from {
+        transform: scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: scale(0.1) translateY(500px);
+        opacity: 0;
+    }
+}
+
+/* 窗口最大化/还原动画 */
+.window.maximizing {
+    animation: window-maximize 0.3s ease forwards;
+}
+
+@keyframes window-maximize {
+    from {
+        top: var(--window-prev-top);
+        left: var(--window-prev-left);
+        width: var(--window-prev-width);
+        height: var(--window-prev-height);
+    }
+    to {
+        top: var(--menu-bar-height);
+        left: 0;
+        width: 100%;
+        height: calc(100% - var(--menu-bar-height));
+        border-radius: 0;
+    }
+}
+
+.window.restoring {
+    animation: window-restore 0.3s ease forwards;
+}
+
+@keyframes window-restore {
+    from {
+        top: var(--menu-bar-height);
+        left: 0;
+        width: 100%;
+        height: calc(100% - var(--menu-bar-height));
+        border-radius: 0;
+    }
+    to {
+        top: var(--window-prev-top);
+        left: var(--window-prev-left);
+        width: var(--window-prev-width);
+        height: var(--window-prev-height);
+        border-radius: var(--window-border-radius);
+    }
+}
+
+/* 窗口标题栏 */
+.window-header {
+    height: 38px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    position: relative;
+    -webkit-app-region: drag; /* 允许拖动窗口 */
+}
+
+.window-controls {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    -webkit-app-region: no-drag; /* 控制按钮不参与窗口拖动 */
+}
+
+.control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.control.close {
+    background-color: #ff5f57;
+}
+
+.control.minimize {
+    background-color: #febc2e;
+}
+
+.control.maximize {
+    background-color: #28c840;
+}
+
+.control.close:hover {
+    background-color: #ff3b30;
+}
+
+.control.minimize:hover {
+    background-color: #f9a825;
+}
+
+.control.maximize:hover {
+    background-color: #00c853;
+}
+
+.window-title {
+    flex-grow: 1;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--macos-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.window-actions {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    -webkit-app-region: no-drag; /* 操作按钮不参与窗口拖动 */
+}
+
+.action-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.action-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.action-button img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+/* 窗口工具栏 */
+.window-toolbar {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--macos-border);
+}
+
+.toolbar-controls, .view-controls, .toolbar-actions {
+    display: flex;
+    align-items: center;
+}
+
+.toolbar-button, .view-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: background-color var(--transition-fast);
+}
+
+.toolbar-button:hover, .view-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.toolbar-button img, .view-button img {
+    width: 16px;
+    height: 16px;
+    opacity: 0.7;
+}
+
+.view-button.active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 窗口内容区域 */
+.window-content {
+    flex-grow: 1;
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+/* 窗口状态栏 */
+.window-statusbar {
+    height: 24px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    border-top: 1px solid var(--macos-border);
+    font-size: 12px;
+    color: var(--macos-secondary-text);
+}
+
+/* 特定窗口样式 */
+.finder-window {
+    width: 800px;
+    height: 500px;
+    top: 100px;
+    left: 100px;
+}
+
+.settings-window {
+    width: 700px;
+    height: 450px;
+    top: 120px;
+    left: 200px;
+}
+
+/* 响应式设计 */
+@media only screen and (max-width: 992px) {
+    .window {
+        min-width: 300px;
+        min-height: 250px;
+    }
+    
+    .finder-window, .settings-window {
+        width: 90%;
+        height: 80%;
+        top: 10%;
+        left: 5%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .window {
+        min-width: 100%;
+        min-height: 100%;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: calc(100% - var(--menu-bar-height)) !important;
+        border-radius: 0;
+    }
+    
+    .window-header {
+        height: 44px;
+    }
+    
+    .control {
+        width: 14px;
+        height: 14px;
+    }
+}

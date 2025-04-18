@@ -1,0 +1,283 @@
+/* launchpad.css - Launchpad应用样式 */
+
+/* Launchpad容器 */
+.launchpad {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 800;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.launchpad.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Launchpad搜索框 */
+.launchpad-search {
+    margin-top: 60px;
+    margin-bottom: 40px;
+    width: 300px;
+    max-width: 90%;
+    animation: slideInDown 0.4s ease;
+}
+
+.launchpad-search-input {
+    width: 100%;
+    height: 36px;
+    border-radius: 18px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 0 15px;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    transition: background-color var(--transition-fast);
+}
+
+.launchpad-search-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.launchpad-search-input:focus {
+    background-color: rgba(255, 255, 255, 0.3);
+    outline: none;
+}
+
+/* Launchpad应用网格 */
+.launchpad-grid {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.launchpad-page {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1000px;
+    width: 100%;
+    animation: scaleIn 0.4s ease;
+}
+
+/* 应用图标 */
+.app-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
+.app-icon:hover {
+    transform: scale(1.1);
+}
+
+.app-icon img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 8px;
+    border-radius: 15px;
+    transition: transform var(--transition-fast);
+}
+
+.app-icon:hover img {
+    transform: scale(1.05);
+}
+
+.app-name {
+    color: white;
+    font-size: 12px;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Launchpad分页指示器 */
+.launchpad-dots {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    animation: fadeIn 0.6s ease;
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 0 5px;
+    transition: background-color var(--transition-fast);
+}
+
+.dot.active {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/* Launchpad应用文件夹 */
+.app-folder {
+    position: relative;
+}
+
+.folder-background {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    padding: 5px;
+    gap: 2px;
+}
+
+.folder-app {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.folder-app img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 文件夹展开视图 */
+.folder-view {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    height: 320px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 20px;
+    z-index: 850;
+    display: none;
+}
+
+.folder-view.show {
+    display: block;
+    animation: scaleIn 0.3s ease;
+}
+
+.folder-title {
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    margin-bottom: 15px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.folder-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+/* Launchpad应用拖拽样式 */
+.app-icon.dragging {
+    opacity: 0.7;
+    position: absolute;
+    z-index: 900;
+    pointer-events: none;
+}
+
+/* Launchpad应用搜索结果 */
+.search-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1000px;
+    width: 100%;
+    animation: fadeIn 0.3s ease;
+}
+
+.no-results {
+    color: white;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 50px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+/* Launchpad应用启动动画 */
+@keyframes app-launch {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+.app-icon.launching img {
+    animation: app-launch 0.3s ease forwards;
+}
+
+/* 响应式设计 */
+@media only screen and (max-width: 768px) {
+    .launchpad-page {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+        gap: 15px;
+    }
+    
+    .app-icon {
+        width: 80px;
+    }
+    
+    .app-icon img {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .folder-view {
+        width: 280px;
+        height: 280px;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .launchpad-search {
+        margin-top: 40px;
+        margin-bottom: 20px;
+    }
+    
+    .launchpad-page {
+        grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+        gap: 10px;
+    }
+    
+    .app-icon {
+        width: 70px;
+    }
+    
+    .app-icon img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .folder-view {
+        width: 240px;
+        height: 240px;
+    }
+}
