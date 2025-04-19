@@ -2,625 +2,124 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>macOS 网页版 - 桌面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="macOS Monterey 网页版是一个在线体验 macOS Monterey 操作系统的开源项目, 使用 HTML、CSS 和 JavaScript 模拟 macOS Monterey 操作系统的界面与交互。">
+    <title>macOS Monterey 网页版</title>
+    <!-- 基础样式 -->
     <link rel="stylesheet" href="css/base.css">
+    <!-- 桌面样式 -->
     <link rel="stylesheet" href="css/desktop.css">
+    <!-- Dock栏样式 -->
     <link rel="stylesheet" href="css/dock.css">
+    <!-- 菜单栏样式 -->
     <link rel="stylesheet" href="css/menubar.css">
-    <link rel="stylesheet" href="css/windows.css">
-    <link rel="stylesheet" href="css/finder.css">
-    <link rel="stylesheet" href="css/launchpad.css">
+    <!-- 控制中心样式 -->
     <link rel="stylesheet" href="css/control-center.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/window-fix.css">
+    <!-- 窗口样式 -->
+    <link rel="stylesheet" href="css/window.css">
+    <!-- 按钮和控件样式 -->
+    <link rel="stylesheet" href="css/buttons.css">
+    <!-- 菜单样式 -->
+    <link rel="stylesheet" href="css/menu.css">
+    <!-- 对话框样式 -->
+    <link rel="stylesheet" href="css/dialog.css">
+    <!-- 应用样式 -->
+    <link rel="stylesheet" href="apps/style/finder.css">
+    <link rel="stylesheet" href="apps/style/launchpad.css">
+    <link rel="stylesheet" href="apps/style/settings.css">
+    <link rel="shortcut icon" href="icons/apple-logo.png" type="image/x-icon">
 </head>
-<body class="desktop-screen">
-    <!-- 桌面背景 -->
-    <div class="desktop-background" id="desktop-background"></div>
-    
+<body>
     <!-- 顶部菜单栏 -->
-    <div class="menu-bar" id="menu-bar">
-        <!-- 苹果菜单 -->
-        <div class="apple-menu-button">
-            <img src="icons/system/apple-logo.svg" alt="Apple Logo" class="apple-logo">
+    <div id="menubar">
+        <div class="menu-left">
+            <div class="apple-menu">
+                <img src="icons/apple-logo.png" alt="Apple Logo" class="apple-logo">
+            </div>
+            <div class="app-menu">
+                <span class="app-name">访达</span>
+                <span class="menu-item">文件</span>
+                <span class="menu-item">编辑</span>
+                <span class="menu-item">显示</span>
+                <span class="menu-item">前往</span>
+                <span class="menu-item">窗口</span>
+                <span class="menu-item">帮助</span>
+            </div>
         </div>
-        
-        <!-- 应用菜单 -->
-        <div class="app-menu" id="app-menu">
-            <div class="menu-item active-app-name" id="active-app-name">访达</div>
-            <div class="menu-item">文件</div>
-            <div class="menu-item">编辑</div>
-            <div class="menu-item">显示</div>
-            <div class="menu-item">前往</div>
-            <div class="menu-item">窗口</div>
-            <div class="menu-item">帮助</div>
-        </div>
-        
-        <!-- 右侧状态图标 -->
-        <div class="status-icons">
-            <div class="status-item battery-status" id="battery-status">
-                <img src="icons/system/battery.svg" alt="电池" class="status-icon">
-            </div>
-            <div class="status-item wifi-status" id="wifi-status">
-                <img src="icons/system/wifi.svg" alt="Wi-Fi" class="status-icon">
-            </div>
-            <div class="status-item control-center-button" id="control-center-button">
-                <img src="icons/system/control-center.svg" alt="控制中心" class="status-icon">
-            </div>
-            <div class="status-item spotlight-button" id="spotlight-button">
-                <img src="icons/system/search.svg" alt="Spotlight" class="status-icon">
-            </div>
-            <div class="status-item notification-center-button" id="notification-center-button">
-                <img src="icons/system/notification.svg" alt="通知中心" class="status-icon">
-            </div>
-            <div class="status-item datetime" id="menu-datetime">
-                <span class="menu-time">00:00</span>
-                <span class="menu-date">周一 1月1日</span>
+        <div class="menu-right">
+            <div class="menu-icons">
+                <span class="menu-icon battery"></span>
+                <span class="menu-icon wifi"></span>
+                <span class="menu-icon search"></span>
+                <span class="menu-icon control-center"></span>
+                <span class="menu-time" id="menu-time">00:00</span>
             </div>
         </div>
     </div>
-    
-    <!-- 应用菜单下拉内容 -->
-    <div class="dropdown-menu apple-dropdown" id="apple-dropdown">
-        <div class="dropdown-item">关于本机</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">系统偏好设置...</div>
-        <div class="dropdown-item">App Store...</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">最近使用的项目</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">强制退出...</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">睡眠</div>
-        <div class="dropdown-item">重新启动...</div>
-        <div class="dropdown-item">关机...</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">锁定屏幕</div>
-        <div class="dropdown-item">退出登录...</div>
+
+    <!-- 桌面区域 -->
+    <div id="desktop">
+        <!-- 桌面图标将通过JavaScript动态添加 -->
     </div>
-    
-    <div class="dropdown-menu file-dropdown" id="file-dropdown">
-        <div class="dropdown-item">新建访达窗口</div>
-        <div class="dropdown-item">新建文件夹</div>
-        <div class="dropdown-item">新建智能文件夹</div>
-        <div class="dropdown-item">新建标签页</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">打开</div>
-        <div class="dropdown-item">打开方式</div>
-        <div class="dropdown-item">关闭窗口</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">获取信息</div>
-        <div class="dropdown-divider"></div>
-        <div class="dropdown-item">打印</div>
-    </div>
-    
-    <!-- 控制中心 -->
-    <div class="control-center" id="control-center">
-        <div class="control-center-header">
-            <div class="control-row">
-                <div class="control-group large">
-                    <div class="control-item wifi-control">
-                        <div class="control-icon">
-                            <img src="icons/system/wifi.svg" alt="Wi-Fi">
-                        </div>
-                        <div class="control-label">Wi-Fi</div>
-                        <div class="control-status">已开启</div>
-                    </div>
-                    <div class="control-item bluetooth-control">
-                        <div class="control-icon">
-                            <img src="icons/system/bluetooth.svg" alt="蓝牙">
-                        </div>
-                        <div class="control-label">蓝牙</div>
-                        <div class="control-status">已开启</div>
-                    </div>
-                </div>
-                <div class="control-group large">
-                    <div class="control-item airdrop-control">
-                        <div class="control-icon">
-                            <img src="icons/system/airdrop.svg" alt="隔空投送">
-                        </div>
-                        <div class="control-label">隔空投送</div>
-                        <div class="control-status">仅限联系人</div>
-                    </div>
-                    <div class="control-item focus-control">
-                        <div class="control-icon">
-                            <img src="icons/system/focus.svg" alt="专注模式">
-                        </div>
-                        <div class="control-label">专注模式</div>
-                        <div class="control-status">关闭</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="control-row">
-                <div class="control-group full-width">
-                    <div class="control-item display-control">
-                        <div class="control-icon">
-                            <img src="icons/system/display.svg" alt="显示器">
-                        </div>
-                        <div class="control-label">显示器</div>
-                        <div class="brightness-slider">
-                            <input type="range" min="0" max="100" value="80" class="slider" id="brightness-slider">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="control-row">
-                <div class="control-group full-width">
-                    <div class="control-item sound-control">
-                        <div class="control-icon">
-                            <img src="icons/system/volume.svg" alt="音量">
-                        </div>
-                        <div class="control-label">音量</div>
-                        <div class="volume-slider">
-                            <input type="range" min="0" max="100" value="60" class="slider" id="volume-slider">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="control-center-footer">
-            <div class="control-row">
-                <div class="control-group">
-                    <div class="control-item small dark-mode-control" id="dark-mode-toggle">
-                        <div class="control-icon">
-                            <img src="icons/system/dark-mode.svg" alt="深色模式">
-                        </div>
-                        <div class="control-label">深色模式</div>
-                    </div>
-                    <div class="control-item small night-shift-control">
-                        <div class="control-icon">
-                            <img src="icons/system/night-shift.svg" alt="夜览">
-                        </div>
-                        <div class="control-label">夜览</div>
-                    </div>
-                </div>
-                <div class="control-group">
-                    <div class="control-item small screen-mirroring-control">
-                        <div class="control-icon">
-                            <img src="icons/system/screen-mirroring.svg" alt="屏幕镜像">
-                        </div>
-                        <div class="control-label">屏幕镜像</div>
-                    </div>
-                    <div class="control-item small accessibility-control">
-                        <div class="control-icon">
-                            <img src="icons/system/accessibility.svg" alt="辅助功能">
-                        </div>
-                        <div class="control-label">辅助功能</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Finder窗口 -->
-    <div class="window finder-window" id="finder-window">
-        <div class="window-header">
-            <div class="window-controls">
-                <div class="control close"></div>
-                <div class="control minimize"></div>
-                <div class="control maximize"></div>
-            </div>
-            <div class="window-title">访达</div>
-            <div class="window-actions">
-                <button class="action-button sidebar-toggle">
-                    <img src="icons/system/sidebar.svg" alt="侧边栏">
-                </button>
-            </div>
-        </div>
-        
-        <div class="window-toolbar">
-            <div class="toolbar-controls">
-                <button class="toolbar-button back-button">
-                    <img src="icons/system/back.svg" alt="后退">
-                </button>
-                <button class="toolbar-button forward-button">
-                    <img src="icons/system/forward.svg" alt="前进">
-                </button>
-            </div>
-            <div class="view-controls">
-                <button class="view-button icon-view active">
-                    <img src="icons/system/icon-view.svg" alt="图标视图">
-                </button>
-                <button class="view-button list-view">
-                    <img src="icons/system/list-view.svg" alt="列表视图">
-                </button>
-                <button class="view-button column-view">
-                    <img src="icons/system/column-view.svg" alt="分栏视图">
-                </button>
-            </div>
-            <div class="toolbar-actions">
-                <button class="toolbar-button action-button">
-                    <img src="icons/system/action.svg" alt="操作">
-                </button>
-                <button class="toolbar-button info-button">
-                    <img src="icons/system/info.svg" alt="信息">
-                </button>
-            </div>
-        </div>
-        
-        <div class="window-content">
-            <div class="finder-sidebar">
-                <div class="sidebar-section">
-                    <div class="sidebar-title">收藏</div>
-                    <div class="sidebar-item active">
-                        <img src="icons/system/airdrop-small.svg" alt="隔空投送" class="sidebar-icon">
-                        <span class="sidebar-label">隔空投送</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <img src="icons/system/recents.svg" alt="最近" class="sidebar-icon">
-                        <span class="sidebar-label">最近</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <img src="icons/system/applications.svg" alt="应用程序" class="sidebar-icon">
-                        <span class="sidebar-label">应用程序</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <img src="icons/system/documents.svg" alt="文稿" class="sidebar-icon">
-                        <span class="sidebar-label">文稿</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <img src="icons/system/downloads.svg" alt="下载" class="sidebar-icon">
-                        <span class="sidebar-label">下载</span>
-                    </div>
-                </div>
-                
-                <div class="sidebar-section">
-                    <div class="sidebar-title">位置</div>
-                    <div class="sidebar-item">
-                        <img src="icons/system/icloud.svg" alt="iCloud" class="sidebar-icon">
-                        <span class="sidebar-label">iCloud</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <img src="icons/system/macintosh-hd.svg" alt="Macintosh HD" class="sidebar-icon">
-                        <span class="sidebar-label">Macintosh HD</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <img src="icons/system/network.svg" alt="网络" class="sidebar-icon">
-                        <span class="sidebar-label">网络</span>
-                    </div>
-                </div>
-                
-                <div class="sidebar-section">
-                    <div class="sidebar-title">标签</div>
-                    <div class="sidebar-item">
-                        <span class="tag-color red"></span>
-                        <span class="sidebar-label">红色</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <span class="tag-color orange"></span>
-                        <span class="sidebar-label">橙色</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <span class="tag-color yellow"></span>
-                        <span class="sidebar-label">黄色</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <span class="tag-color green"></span>
-                        <span class="sidebar-label">绿色</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <span class="tag-color blue"></span>
-                        <span class="sidebar-label">蓝色</span>
-                    </div>
-                    <div class="sidebar-item">
-                        <span class="tag-color purple"></span>
-                        <span class="sidebar-label">紫色</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="finder-content">
-                <div class="finder-path-bar">
-                    <div class="path-item">
-                        <img src="icons/system/macintosh-hd-small.svg" alt="Macintosh HD" class="path-icon">
-                        <span class="path-label">Macintosh HD</span>
-                    </div>
-                    <div class="path-separator">/</div>
-                    <div class="path-item">
-                        <img src="icons/system/users.svg" alt="用户" class="path-icon">
-                        <span class="path-label">用户</span>
-                    </div>
-                    <div class="path-separator">/</div>
-                    <div class="path-item">
-                        <img src="icons/system/user.svg" alt="用户" class="path-icon">
-                        <span class="path-label">访客用户</span>
-                    </div>
-                    <div class="path-separator">/</div>
-                    <div class="path-item active">
-                        <img src="icons/system/documents.svg" alt="文稿" class="path-icon">
-                        <span class="path-label">文稿</span>
-                    </div>
-                </div>
-                
-                <div class="finder-files icon-view">
-                    <div class="file-item">
-                        <div class="file-icon">
-                            <img src="icons/system/folder.svg" alt="文件夹">
-                        </div>
-                        <div class="file-name">项目</div>
-                    </div>
-                    <div class="file-item">
-                        <div class="file-icon">
-                            <img src="icons/system/folder.svg" alt="文件夹">
-                        </div>
-                        <div class="file-name">照片</div>
-                    </div>
-                    <div class="file-item">
-                        <div class="file-icon">
-                            <img src="icons/system/folder.svg" alt="文件夹">
-                        </div>
-                        <div class="file-name">音乐</div>
-                    </div>
-                    <div class="file-item">
-                        <div class="file-icon">
-                            <img src="icons/system/pdf.svg" alt="PDF">
-                        </div>
-                        <div class="file-name">报告.pdf</div>
-                    </div>
-                    <div class="file-item">
-                        <div class="file-icon">
-                            <img src="icons/system/doc.svg" alt="文档">
-                        </div>
-                        <div class="file-name">笔记.docx</div>
-                    </div>
-                    <div class="file-item">
-                        <div class="file-icon">
-                            <img src="icons/system/image.svg" alt="图片">
-                        </div>
-                        <div class="file-name">截图.png</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="window-statusbar">
-            <div class="status-info">6项，可用空间15.24GB</div>
-        </div>
-    </div>
-    
-    <!-- Launchpad -->
-    <div class="launchpad" id="launchpad">
-        <div class="launchpad-search">
-            <input type="text" placeholder="搜索" class="launchpad-search-input">
-        </div>
-        
-        <div class="launchpad-grid">
-            <div class="launchpad-page">
-                <div class="app-icon">
-                    <img src="icons/apps/safari.png" alt="Safari">
-                    <div class="app-name">Safari</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/mail.png" alt="邮件">
-                    <div class="app-name">邮件</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/contacts.png" alt="通讯录">
-                    <div class="app-name">通讯录</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/calendar.png" alt="日历">
-                    <div class="app-name">日历</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/notes.png" alt="备忘录">
-                    <div class="app-name">备忘录</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/reminders.png" alt="提醒事项">
-                    <div class="app-name">提醒事项</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/maps.png" alt="地图">
-                    <div class="app-name">地图</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/messages.png" alt="信息">
-                    <div class="app-name">信息</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/facetime.png" alt="FaceTime">
-                    <div class="app-name">FaceTime</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/photos.png" alt="照片">
-                    <div class="app-name">照片</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/music.png" alt="音乐">
-                    <div class="app-name">音乐</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/podcasts.png" alt="播客">
-                    <div class="app-name">播客</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/tv.png" alt="TV">
-                    <div class="app-name">TV</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/news.png" alt="新闻">
-                    <div class="app-name">新闻</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/appstore.png" alt="App Store">
-                    <div class="app-name">App Store</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/settings.png" alt="系统偏好设置">
-                    <div class="app-name">系统偏好设置</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/calculator.png" alt="计算器">
-                    <div class="app-name">计算器</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/terminal.png" alt="终端">
-                    <div class="app-name">终端</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/books.png" alt="图书">
-                    <div class="app-name">图书</div>
-                </div>
-                <div class="app-icon">
-                    <img src="icons/apps/preview.png" alt="预览">
-                    <div class="app-name">预览</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="launchpad-dots">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
-    </div>
-    
+
     <!-- Dock栏 -->
-    <div class="dock-container">
-        <div class="dock">
-            <div class="dock-app finder-app" id="dock-finder">
-                <img src="icons/apps/finder.png" alt="访达" class="dock-icon">
-                <div class="dock-indicator"></div>
+    <div id="dock-container">
+        <div id="dock">
+            <div class="dock-item finder" data-app="finder">
+                <img src="icons/finder.png" alt="Finder">
             </div>
-            <div class="dock-app launchpad-app" id="dock-launchpad">
-                <img src="icons/apps/launchpad.png" alt="启动台" class="dock-icon">
+            <div class="dock-item launchpad" data-app="launchpad">
+                <img src="icons/launchpad.png" alt="Launchpad">
             </div>
-            <div class="dock-app safari-app" id="dock-safari">
-                <img src="icons/apps/safari.png" alt="Safari" class="dock-icon">
+            <div class="dock-item safari" data-app="safari">
+                <img src="icons/safari.png" alt="Safari">
             </div>
-            <div class="dock-app mail-app" id="dock-mail">
-                <img src="icons/apps/mail.png" alt="邮件" class="dock-icon">
+            <div class="dock-item messages" data-app="messages">
+                <img src="icons/messages.png" alt="Messages">
             </div>
-            <div class="dock-app notes-app" id="dock-notes">
-                <img src="icons/apps/notes.png" alt="备忘录" class="dock-icon">
+            <div class="dock-item mail" data-app="mail">
+                <img src="icons/mail.png" alt="Mail">
             </div>
-            <div class="dock-app messages-app" id="dock-messages">
-                <img src="icons/apps/messages.png" alt="信息" class="dock-icon">
+            <div class="dock-item photos" data-app="photos">
+                <img src="icons/photos.png" alt="Photos">
             </div>
-            <div class="dock-app maps-app" id="dock-maps">
-                <img src="icons/apps/maps.png" alt="地图" class="dock-icon">
-            </div>
-            <div class="dock-app photos-app" id="dock-photos">
-                <img src="icons/apps/photos.png" alt="照片" class="dock-icon">
-            </div>
-            <div class="dock-app settings-app" id="dock-settings">
-                <img src="icons/apps/settings.png" alt="系统偏好设置" class="dock-icon">
+            <div class="dock-item settings" data-app="settings">
+                <img src="icons/settings.png" alt="Settings">
             </div>
             <div class="dock-divider"></div>
-            <div class="dock-app trash-app" id="dock-trash">
-                <img src="icons/apps/trash.png" alt="废纸篓" class="dock-icon">
+            <div class="dock-item trash" data-app="trash">
+                <img src="icons/trash.png" alt="Trash">
             </div>
         </div>
     </div>
-    
-    <!-- 壁纸设置面板 -->
-    <div class="wallpaper-panel" id="wallpaper-panel">
-        <div class="panel-header">
-            <h2>选择壁纸</h2>
-            <button class="close-button" id="close-wallpaper-panel">×</button>
-        </div>
-        <div class="wallpaper-categories">
-            <div class="category active">macOS</div>
-            <div class="category">风景</div>
-            <div class="category">抽象</div>
-            <div class="category">自然</div>
-            <div class="category">自定义</div>
-        </div>
-        <div class="wallpaper-grid">
-            <div class="wallpaper-item active">
-                <img src="img/wallpapers/monterey.jpg" alt="Monterey" data-wallpaper="monterey.jpg">
-            </div>
-            <div class="wallpaper-item">
-                <img src="img/wallpapers/big-sur.jpg" alt="Big Sur" data-wallpaper="big-sur.jpg">
-            </div>
-            <div class="wallpaper-item">
-                <img src="img/wallpapers/catalina.jpg" alt="Catalina" data-wallpaper="catalina.jpg">
-            </div>
-            <div class="wallpaper-item">
-                <img src="img/wallpapers/mojave.jpg" alt="Mojave" data-wallpaper="mojave.jpg">
-            </div>
-            <div class="wallpaper-item">
-                <img src="img/wallpapers/mojave-night.jpg" alt="Mojave Night" data-wallpaper="mojave-night.jpg">
-            </div>
-            <div class="wallpaper-item">
-                <img src="img/wallpapers/high-sierra.jpg" alt="High Sierra" data-wallpaper="high-sierra.jpg">
-            </div>
-        </div>
-        <div class="wallpaper-actions">
-            <label for="wallpaper-upload" class="upload-button">上传壁纸</label>
-            <input type="file" id="wallpaper-upload" accept="image/*" style="display: none;">
-            <button class="apply-button" id="apply-wallpaper">应用</button>
-        </div>
+
+    <!-- 控制中心 -->
+    <div id="control-center" class="hidden">
+        <!-- 控制中心内容将通过JavaScript动态添加 -->
     </div>
-    
-    <!-- 系统偏好设置窗口 -->
-    <div class="window settings-window" id="settings-window">
-        <div class="window-header">
-            <div class="window-controls">
-                <div class="control close"></div>
-                <div class="control minimize"></div>
-                <div class="control maximize"></div>
-            </div>
-            <div class="window-title">系统偏好设置</div>
-        </div>
-        
-        <div class="window-content">
-            <div class="settings-grid">
-                <div class="settings-item" id="general-settings">
-                    <img src="icons/settings/general.png" alt="通用" class="settings-icon">
-                    <div class="settings-name">通用</div>
-                </div>
-                <div class="settings-item" id="appearance-settings">
-                    <img src="icons/settings/appearance.png" alt="外观" class="settings-icon">
-                    <div class="settings-name">外观</div>
-                </div>
-                <div class="settings-item" id="dock-settings">
-                    <img src="icons/settings/dock.png" alt="程序坞" class="settings-icon">
-                    <div class="settings-name">程序坞与菜单栏</div>
-                </div>
-                <div class="settings-item" id="wallpaper-settings">
-                    <img src="icons/settings/wallpaper.png" alt="壁纸" class="settings-icon">
-                    <div class="settings-name">桌面与屏幕保护程序</div>
-                </div>
-                <div class="settings-item" id="users-settings">
-                    <img src="icons/settings/users.png" alt="用户" class="settings-icon">
-                    <div class="settings-name">用户与群组</div>
-                </div>
-                <div class="settings-item" id="accessibility-settings">
-                    <img src="icons/settings/accessibility.png" alt="辅助功能" class="settings-icon">
-                    <div class="settings-name">辅助功能</div>
-                </div>
-            </div>
-        </div>
+
+    <!-- 应用窗口容器 -->
+    <div id="windows-container">
+        <!-- 应用窗口将通过JavaScript动态添加 -->
     </div>
-    
-    <!-- 上下文菜单 -->
-    <div class="context-menu" id="desktop-context-menu">
-        <div class="context-menu-item">新建文件夹</div>
-        <div class="context-menu-item">获取信息</div>
-        <div class="context-menu-divider"></div>
-        <div class="context-menu-item">更改桌面背景...</div>
-        <div class="context-menu-divider"></div>
-        <div class="context-menu-item">排序方式</div>
-        <div class="context-menu-item">整理</div>
+
+    <!-- Launchpad -->
+    <div id="launchpad" class="hidden">
+        <!-- Launchpad内容将通过JavaScript动态添加 -->
     </div>
-    
-    <!-- 加载脚本 -->
-    <script src="js/desktop.js"></script>
+
+    <!-- 右键菜单 -->
+    <div id="context-menu" class="hidden">
+        <!-- 右键菜单内容将通过JavaScript动态添加 -->
+    </div>
+
+    <!-- JavaScript 文件 -->
+    <script src="js/main.js"></script>
+    <script src="js/window.js"></script>
     <script src="js/dock.js"></script>
     <script src="js/menubar.js"></script>
-    <script src="js/finder.js"></script>
-    <script src="js/finder-fix.js"></script>
-    <script src="js/launchpad.js"></script>
     <script src="js/control-center.js"></script>
-    <script src="js/window-manager.js"></script>
-    <script src="js/wallpaper.js"></script>
-    <script src="js/settings.js"></script>
-    <script src="js/animations.js"></script>
+    <script src="js/apps.js"></script>
 </body>
 </html>

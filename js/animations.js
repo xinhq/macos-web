@@ -1,598 +1,403 @@
-// animations.js - 增强动画和过渡效果
-
-// 等待DOM加载完成
-document.addEventListener('DOMContentLoaded', function() {
-    // 初始化动画效果
-    initAnimations();
-});
-
 /**
- * 初始化动画效果
+ * macOS Monterey 网页版 - 动画和视觉效果
+ * 负责实现各种动画和过渡效果
  */
-function initAnimations() {
+
+// 动画管理器
+const animationManager = {
+    // 初始化动画
+    init: function() {
+        console.log('动画管理器已初始化');
+        
+        // 添加亮度调整覆盖层
+        this._createBrightnessOverlay();
+        
+        // 初始化窗口动画
+        this._initWindowAnimations();
+        
+        // 初始化Dock动画
+        this._initDockAnimations();
+        
+        // 初始化菜单动画
+        this._initMenuAnimations();
+        
+        // 初始化深色模式过渡
+        this._initDarkModeTransition();
+    },
+    
+    // 创建亮度调整覆盖层
+    _createBrightnessOverlay: function() {
+        const overlay = document.createElement('div');
+        overlay.className = 'brightness-overlay';
+        overlay.id = 'brightness-overlay';
+        document.body.appendChild(overlay);
+        
+        // 设置初始亮度
+        this.setBrightness(80);
+    },
+    
     // 初始化窗口动画
-    initWindowAnimations();
-    
-    // 初始化Dock动画
-    initDockAnimations();
-    
-    // 初始化菜单动画
-    initMenuAnimations();
-    
-    // 初始化桌面动画
-    initDesktopAnimations();
-    
-    // 初始化登录动画
-    initLoginAnimations();
-    
-    // 初始化应用启动动画
-    initAppLaunchAnimations();
-}
-
-/**
- * 初始化窗口动画
- */
-function initWindowAnimations() {
-    // 获取所有窗口
-    const windows = document.querySelectorAll('.window');
-    
-    // 为每个窗口添加动画类
-    windows.forEach(window => {
-        // 添加初始动画类
-        window.classList.add('window-animated');
-        
-        // 获取窗口控制按钮
-        const minimizeButton = window.querySelector('.control.minimize');
-        const maximizeButton = window.querySelector('.control.maximize');
-        const closeButton = window.querySelector('.control.close');
-        
-        // 为最小化按钮添加点击事件
-        if (minimizeButton) {
-            minimizeButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                
-                // 添加最小化动画类
-                window.classList.add('window-minimizing');
-                
-                // 获取对应的Dock图标
-                const appId = window.id.replace('-window', '');
-                const dockIcon = document.querySelector(`.dock-icon[data-app="${appId}"]`);
-                
-                // 计算窗口到Dock图标的位置
-                if (dockIcon) {
-                    const windowRect = window.getBoundingClientRect();
-                    const iconRect = dockIcon.getBoundingClientRect();
-                    
-                    // 设置动画终点
-                    const translateX = iconRect.left + iconRect.width / 2 - (windowRect.left + windowRect.width / 2);
-                    const translateY = iconRect.top + iconRect.height / 2 - (windowRect.top + windowRect.height / 2);
-                    
-                    // 应用动画
-                    window.style.setProperty('--minimize-translate-x', `${translateX}px`);
-                    window.style.setProperty('--minimize-translate-y', `${translateY}px`);
-                }
-                
-                // 动画结束后隐藏窗口
-                setTimeout(() => {
-                    window.classList.remove('window-minimizing');
-                    window.style.display = 'none';
-                    
-                    // 更新窗口状态
-                    window.dataset.state = 'minimized';
-                }, 300);
-            });
-        }
-        
-        // 为最大化按钮添加点击事件
-        if (maximizeButton) {
-            maximizeButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                
-                // 切换最大化状态
-                if (window.dataset.state === 'maximized') {
-                    // 恢复窗口大小
-                    window.classList.add('window-unmaximizing');
-                    
-                    // 恢复窗口位置和大小
-                    const originalWidth = window.dataset.originalWidth || '800px';
-                    const originalHeight = window.dataset.originalHeight || '600px';
-                    const originalLeft = window.dataset.originalLeft || '50%';
-                    const originalTop = window.dataset.originalTop || '50%';
-                    
-                    setTimeout(() => {
-                        window.style.width = originalWidth;
-                        window.style.height = originalHeight;
-                        window.style.left = originalLeft;
-                        window.style.top = originalTop;
-                        window.style.transform = 'translate(-50%, -50%)';
-                        
-                        // 更新窗口状态
-                        window.dataset.state = 'normal';
-                        
-                        // 移除动画类
-                        window.classList.remove('window-unmaximizing');
-                    }, 10);
-                } else {
-                    // 保存窗口原始大小和位置
-                    window.dataset.originalWidth = window.style.width;
-                    window.dataset.originalHeight = window.style.height;
-                    window.dataset.originalLeft = window.style.left;
-                    window.dataset.originalTop = window.style.top;
-                    
-                    // 最大化窗口
-                    window.classList.add('window-maximizing');
-                    
-                    setTimeout(() => {
-                        window.style.width = '100%';
-                        window.style.height = 'calc(100% - 25px)';
-                        window.style.left = '50%';
-                        window.style.top = 'calc(25px + 50%)';
-                        window.style.transform = 'translate(-50%, -50%)';
-                        
-                        // 更新窗口状态
-                        window.dataset.state = 'maximized';
-                        
-                        // 移除动画类
-                        window.classList.remove('window-maximizing');
-                    }, 10);
-                }
-            });
-        }
-        
-        // 为关闭按钮添加点击事件
-        if (closeButton) {
-            closeButton.addEventListener('click', function(e) {
-                e.stopPropagation();
-                
-                // 添加关闭动画类
-                window.classList.add('window-closing');
-                
-                // 动画结束后移除窗口
-                setTimeout(() => {
-                    window.style.display = 'none';
-                    window.classList.remove('window-closing');
-                    
-                    // 更新窗口状态
-                    window.dataset.state = 'closed';
-                }, 300);
-            });
-        }
-    });
-    
-    // 重写窗口打开函数，添加动画
-    if (window.openWindow) {
-        const originalOpenWindow = window.openWindow;
-        
-        window.openWindow = function(windowId) {
-            const windowElement = document.getElementById(windowId);
+    _initWindowAnimations: function() {
+        // 监听窗口创建事件
+        document.addEventListener('window-created', (e) => {
+            const windowId = e.detail.windowId;
+            const windowElement = document.querySelector(`.window[data-id="${windowId}"]`);
             
             if (windowElement) {
-                // 如果窗口已经存在，则显示窗口
-                if (windowElement.dataset.state === 'minimized' || windowElement.dataset.state === 'closed') {
-                    // 添加打开动画类
-                    windowElement.classList.add('window-opening');
-                    
-                    // 显示窗口
-                    windowElement.style.display = 'block';
-                    
-                    // 更新窗口状态
-                    windowElement.dataset.state = 'normal';
-                    
-                    // 动画结束后移除动画类
-                    setTimeout(() => {
-                        windowElement.classList.remove('window-opening');
-                    }, 300);
-                    
-                    // 将窗口置于顶层
-                    bringWindowToFront(windowElement);
-                } else {
-                    // 将窗口置于顶层
-                    bringWindowToFront(windowElement);
-                }
-            } else {
-                // 如果窗口不存在，则调用原始函数
-                originalOpenWindow(windowId);
+                // 添加打开动画
+                windowElement.style.animation = 'windowOpen var(--window-animation-speed) var(--animation-easing)';
                 
-                // 获取新创建的窗口
-                const newWindow = document.getElementById(windowId);
-                
-                if (newWindow) {
-                    // 添加打开动画类
-                    newWindow.classList.add('window-opening');
-                    
-                    // 动画结束后移除动画类
-                    setTimeout(() => {
-                        newWindow.classList.remove('window-opening');
-                    }, 300);
-                }
+                // 动画结束后清除动画属性
+                windowElement.addEventListener('animationend', () => {
+                    windowElement.style.animation = '';
+                }, { once: true });
             }
-        };
-    }
-}
-
-/**
- * 将窗口置于顶层
- * @param {HTMLElement} windowElement - 窗口元素
- */
-function bringWindowToFront(windowElement) {
-    // 获取所有窗口
-    const windows = document.querySelectorAll('.window');
-    
-    // 获取最高的z-index
-    let maxZIndex = 0;
-    
-    windows.forEach(window => {
-        const zIndex = parseInt(window.style.zIndex || 0);
+        });
         
-        if (zIndex > maxZIndex) {
-            maxZIndex = zIndex;
+        // 监听窗口关闭事件
+        document.addEventListener('window-closing', (e) => {
+            const windowId = e.detail.windowId;
+            const windowElement = document.querySelector(`.window[data-id="${windowId}"]`);
+            
+            if (windowElement) {
+                // 添加关闭动画
+                windowElement.classList.add('closing');
+                
+                // 动画结束后移除窗口
+                windowElement.addEventListener('animationend', () => {
+                    windowElement.remove();
+                }, { once: true });
+            }
+        });
+        
+        // 监听窗口最小化事件
+        document.addEventListener('window-minimizing', (e) => {
+            const windowId = e.detail.windowId;
+            const windowElement = document.querySelector(`.window[data-id="${windowId}"]`);
+            
+            if (windowElement) {
+                // 添加最小化动画
+                windowElement.classList.add('minimizing');
+                
+                // 动画结束后隐藏窗口
+                windowElement.addEventListener('animationend', () => {
+                    windowElement.style.display = 'none';
+                    windowElement.classList.remove('minimizing');
+                }, { once: true });
+            }
+        });
+        
+        // 监听窗口恢复事件
+        document.addEventListener('window-restoring', (e) => {
+            const windowId = e.detail.windowId;
+            const windowElement = document.querySelector(`.window[data-id="${windowId}"]`);
+            
+            if (windowElement) {
+                // 显示窗口
+                windowElement.style.display = 'flex';
+                
+                // 添加恢复动画
+                windowElement.style.animation = 'windowOpen var(--window-animation-speed) var(--animation-easing)';
+                
+                // 动画结束后清除动画属性
+                windowElement.addEventListener('animationend', () => {
+                    windowElement.style.animation = '';
+                }, { once: true });
+            }
+        });
+    },
+    
+    // 初始化Dock动画
+    _initDockAnimations: function() {
+        // 获取Dock元素
+        const dock = document.getElementById('dock');
+        if (!dock) return;
+        
+        // 获取所有Dock项
+        const dockItems = dock.querySelectorAll('.dock-item');
+        
+        // 为每个Dock项添加鼠标悬停效果
+        dockItems.forEach(item => {
+            // 鼠标进入时
+            item.addEventListener('mouseenter', () => {
+                this._updateDockMagnification(dock, item);
+            });
+            
+            // 鼠标移动时
+            item.addEventListener('mousemove', (e) => {
+                this._updateDockMagnification(dock, item, e);
+            });
+        });
+        
+        // 鼠标离开Dock时重置所有项
+        dock.addEventListener('mouseleave', () => {
+            dockItems.forEach(item => {
+                item.style.transform = '';
+                item.style.margin = '';
+            });
+        });
+        
+        // 为Dock添加鼠标移动事件，实现连续的放大效果
+        dock.addEventListener('mousemove', (e) => {
+            this._updateDockMagnification(dock, null, e);
+        });
+    },
+    
+    // 更新Dock放大效果
+    _updateDockMagnification: function(dock, activeItem, event) {
+        // 获取所有Dock项
+        const dockItems = dock.querySelectorAll('.dock-item');
+        
+        // 如果提供了事件对象，使用鼠标位置计算放大效果
+        if (event) {
+            const dockRect = dock.getBoundingClientRect();
+            const mouseX = event.clientX;
+            
+            dockItems.forEach(item => {
+                const itemRect = item.getBoundingClientRect();
+                const itemX = itemRect.left + itemRect.width / 2;
+                
+                // 计算鼠标与项目中心的距离
+                const distance = Math.abs(mouseX - itemX);
+                
+                // 根据距离计算缩放比例
+                let scale = 1;
+                const maxDistance = 100;
+                
+                if (distance < maxDistance) {
+                    // 距离越近，缩放越大
+                    scale = 1 + (1 - distance / maxDistance) * 0.5;
+                }
+                
+                // 应用缩放
+                item.style.transform = `scale(${scale})`;
+                
+                // 根据缩放调整边距
+                const margin = scale > 1 ? `0 ${(scale - 1) * 10}px` : '';
+                item.style.margin = margin;
+            });
         }
-    });
-    
-    // 设置当前窗口的z-index
-    windowElement.style.zIndex = maxZIndex + 1;
-}
-
-/**
- * 初始化Dock动画
- */
-function initDockAnimations() {
-    const dock = document.querySelector('.dock');
-    
-    // 如果Dock不存在，则返回
-    if (!dock) return;
-    
-    // 获取Dock图标
-    const dockIcons = dock.querySelectorAll('.dock-icon');
-    
-    // 为每个Dock图标添加鼠标事件
-    dockIcons.forEach(icon => {
-        // 鼠标进入事件
-        icon.addEventListener('mouseenter', function() {
-            // 添加弹跳动画类
-            this.classList.add('dock-icon-bounce');
-            
-            // 动画结束后移除动画类
-            setTimeout(() => {
-                this.classList.remove('dock-icon-bounce');
-            }, 500);
-        });
-        
-        // 点击事件
-        icon.addEventListener('click', function() {
-            // 添加点击动画类
-            this.classList.add('dock-icon-click');
-            
-            // 动画结束后移除动画类
-            setTimeout(() => {
-                this.classList.remove('dock-icon-click');
-            }, 300);
-        });
-    });
-    
-    // 为Dock添加鼠标移动事件，实现图标放大效果
-    dock.addEventListener('mousemove', function(e) {
-        // 获取鼠标在Dock中的位置
-        const dockRect = dock.getBoundingClientRect();
-        const mouseX = e.clientX - dockRect.left;
-        const mouseY = e.clientY - dockRect.top;
-        
-        // 获取Dock位置
-        const dockPosition = localStorage.getItem('dockPosition') || 'bottom';
-        
-        // 获取Dock放大效果设置
-        const magnificationEnabled = localStorage.getItem('dockMagnification') === 'true';
-        
-        // 如果放大效果已禁用，则返回
-        if (!magnificationEnabled) return;
-        
-        // 遍历所有Dock图标
-        dockIcons.forEach(icon => {
-            // 获取图标在Dock中的位置
-            const iconRect = icon.getBoundingClientRect();
-            const iconX = iconRect.left + iconRect.width / 2 - dockRect.left;
-            const iconY = iconRect.top + iconRect.height / 2 - dockRect.top;
-            
-            // 计算鼠标与图标的距离
-            let distance;
-            
-            if (dockPosition === 'bottom' || dockPosition === 'top') {
-                distance = Math.abs(mouseX - iconX);
-            } else {
-                distance = Math.abs(mouseY - iconY);
-            }
-            
-            // 计算缩放比例
-            const maxDistance = 100;
-            const maxScale = 1.5;
-            const scale = Math.max(1, maxScale - (distance / maxDistance) * (maxScale - 1));
-            
-            // 应用缩放
-            icon.style.transform = `scale(${scale})`;
-        });
-    });
-    
-    // 鼠标离开Dock时重置图标大小
-    dock.addEventListener('mouseleave', function() {
-        dockIcons.forEach(icon => {
-            icon.style.transform = 'scale(1)';
-        });
-    });
-}
-
-/**
- * 初始化菜单动画
- */
-function initMenuAnimations() {
-    // 获取所有下拉菜单
-    const dropdowns = document.querySelectorAll('.dropdown-menu');
-    
-    // 为每个下拉菜单添加过渡动画
-    dropdowns.forEach(dropdown => {
-        dropdown.classList.add('dropdown-animated');
-    });
-    
-    // 获取控制中心
-    const controlCenter = document.querySelector('.control-center');
-    
-    if (controlCenter) {
-        controlCenter.classList.add('dropdown-animated');
-    }
-    
-    // 获取通知中心
-    const notificationCenter = document.querySelector('.notification-center');
-    
-    if (notificationCenter) {
-        notificationCenter.classList.add('dropdown-animated');
-    }
-    
-    // 重写菜单显示函数，添加动画
-    if (window.toggleControlCenter) {
-        const originalToggleControlCenter = window.toggleControlCenter;
-        
-        window.toggleControlCenter = function() {
-            const controlCenter = document.querySelector('.control-center');
-            
-            if (controlCenter) {
-                // 隐藏其他下拉菜单
-                hideAllDropdowns();
-                
-                // 切换控制中心
-                if (controlCenter.classList.contains('show')) {
-                    controlCenter.classList.add('dropdown-hiding');
-                    
-                    setTimeout(() => {
-                        controlCenter.classList.remove('show');
-                        controlCenter.classList.remove('dropdown-hiding');
-                    }, 300);
-                } else {
-                    controlCenter.classList.add('dropdown-showing');
-                    controlCenter.classList.add('show');
-                    
-                    setTimeout(() => {
-                        controlCenter.classList.remove('dropdown-showing');
-                    }, 300);
-                }
-            }
-        };
-    }
-    
-    if (window.toggleNotificationCenter) {
-        const originalToggleNotificationCenter = window.toggleNotificationCenter;
-        
-        window.toggleNotificationCenter = function() {
-            const notificationCenter = document.querySelector('.notification-center');
-            
-            if (notificationCenter) {
-                // 隐藏其他下拉菜单
-                hideAllDropdowns();
-                
-                // 切换通知中心
-                if (notificationCenter.classList.contains('show')) {
-                    notificationCenter.classList.add('dropdown-hiding');
-                    
-                    setTimeout(() => {
-                        notificationCenter.classList.remove('show');
-                        notificationCenter.classList.remove('dropdown-hiding');
-                    }, 300);
-                } else {
-                    notificationCenter.classList.add('dropdown-showing');
-                    notificationCenter.classList.add('show');
-                    
-                    setTimeout(() => {
-                        notificationCenter.classList.remove('dropdown-showing');
-                    }, 300);
-                }
-            } else {
-                alert('打开通知中心');
-            }
-        };
-    }
-}
-
-/**
- * 隐藏所有下拉菜单
- */
-function hideAllDropdowns() {
-    // 隐藏所有下拉菜单
-    const dropdowns = document.querySelectorAll('.dropdown-menu');
-    
-    dropdowns.forEach(dropdown => {
-        if (dropdown.classList.contains('show')) {
-            dropdown.classList.add('dropdown-hiding');
-            
-            setTimeout(() => {
-                dropdown.classList.remove('show');
-                dropdown.classList.remove('dropdown-hiding');
-            }, 300);
+        // 如果只提供了活动项，只放大该项
+        else if (activeItem) {
+            activeItem.style.transform = 'scale(1.5)';
+            activeItem.style.margin = '0 10px';
         }
-    });
+    },
     
-    // 隐藏控制中心
-    const controlCenter = document.querySelector('.control-center');
-    
-    if (controlCenter && controlCenter.classList.contains('show')) {
-        controlCenter.classList.add('dropdown-hiding');
-        
-        setTimeout(() => {
-            controlCenter.classList.remove('show');
-            controlCenter.classList.remove('dropdown-hiding');
-        }, 300);
-    }
-    
-    // 隐藏通知中心
-    const notificationCenter = document.querySelector('.notification-center');
-    
-    if (notificationCenter && notificationCenter.classList.contains('show')) {
-        notificationCenter.classList.add('dropdown-hiding');
-        
-        setTimeout(() => {
-            notificationCenter.classList.remove('show');
-            notificationCenter.classList.remove('dropdown-hiding');
-        }, 300);
-    }
-}
-
-/**
- * 初始化桌面动画
- */
-function initDesktopAnimations() {
-    // 获取桌面背景
-    const desktopBackground = document.querySelector('.desktop-background');
-    
-    if (desktopBackground) {
-        // 添加过渡动画
-        desktopBackground.classList.add('background-transition');
-    }
-    
-    // 获取桌面图标
-    const desktopIcons = document.querySelectorAll('.desktop-icon');
-    
-    // 为每个桌面图标添加动画
-    desktopIcons.forEach(icon => {
-        // 添加动画类
-        icon.classList.add('desktop-icon-animated');
-        
-        // 鼠标进入事件
-        icon.addEventListener('mouseenter', function() {
-            this.classList.add('desktop-icon-hover');
-        });
-        
-        // 鼠标离开事件
-        icon.addEventListener('mouseleave', function() {
-            this.classList.remove('desktop-icon-hover');
-        });
-        
-        // 点击事件
-        icon.addEventListener('click', function() {
-            this.classList.add('desktop-icon-click');
+    // 添加Dock弹跳动画
+    addDockBounce: function(appId) {
+        const dockItem = document.querySelector(`.dock-item[data-app="${appId}"]`);
+        if (dockItem) {
+            // 移除现有的弹跳类
+            dockItem.classList.remove('bounce');
             
-            setTimeout(() => {
-                this.classList.remove('desktop-icon-click');
-            }, 300);
-        });
-    });
-}
-
-/**
- * 初始化登录动画
- */
-function initLoginAnimations() {
-    // 获取登录按钮
-    const loginButton = document.querySelector('.login-button');
-    
-    if (loginButton) {
-        // 添加点击事件
-        loginButton.addEventListener('click', function() {
-            // 获取登录屏幕和桌面屏幕
-            const loginScreen = document.querySelector('.login-screen');
-            const desktopScreen = document.querySelector('.desktop-screen');
+            // 触发重绘
+            void dockItem.offsetWidth;
             
-            if (loginScreen && desktopScreen) {
-                // 添加过渡动画类
-                loginScreen.classList.add('login-fade-out');
-                desktopScreen.classList.add('desktop-fade-in');
+            // 添加弹跳类
+            dockItem.classList.add('bounce');
+            
+            // 动画结束后移除类
+            dockItem.addEventListener('animationend', () => {
+                dockItem.classList.remove('bounce');
+            }, { once: true });
+        }
+    },
+    
+    // 初始化菜单动画
+    _initMenuAnimations: function() {
+        // 监听菜单打开事件
+        document.addEventListener('menu-opened', (e) => {
+            const menuId = e.detail.menuId;
+            const menuElement = document.getElementById(menuId);
+            
+            if (menuElement) {
+                // 添加打开动画
+                menuElement.style.animation = 'menuFadeIn var(--menu-animation-speed) ease';
                 
-                // 延迟显示桌面
-                setTimeout(() => {
-                    loginScreen.style.display = 'none';
-                    desktopScreen.style.display = 'block';
-                    
-                    // 移除动画类
-                    loginScreen.classList.remove('login-fade-out');
-                    desktopScreen.classList.remove('desktop-fade-in');
-                }, 1000);
+                // 动画结束后清除动画属性
+                menuElement.addEventListener('animationend', () => {
+                    menuElement.style.animation = '';
+                }, { once: true });
             }
         });
-    }
-}
-
-/**
- * 初始化应用启动动画
- */
-function initAppLaunchAnimations() {
-    // 获取所有应用图标
-    const appIcons = document.querySelectorAll('.dock-icon, .launchpad-icon, .desktop-icon');
-    
-    // 为每个应用图标添加点击事件
-    appIcons.forEach(icon => {
-        icon.addEventListener('click', function() {
-            // 获取应用ID
-            const appId = this.dataset.app;
-            
-            if (appId) {
-                // 创建应用启动动画
-                createAppLaunchAnimation(this, appId);
-            }
-        });
-    });
-}
-
-/**
- * 创建应用启动动画
- * @param {HTMLElement} iconElement - 图标元素
- * @param {string} appId - 应用ID
- */
-function createAppLaunchAnimation(iconElement, appId) {
-    // 获取图标位置
-    const iconRect = iconElement.getBoundingClientRect();
-    
-    // 创建动画元素
-    const animationElement = document.createElement('div');
-    animationElement.className = 'app-launch-animation';
-    
-    // 设置动画元素初始位置和大小
-    animationElement.style.left = `${iconRect.left}px`;
-    animationElement.style.top = `${iconRect.top}px`;
-    animationElement.style.width = `${iconRect.width}px`;
-    animationElement.style.height = `${iconRect.height}px`;
-    
-    // 添加图标图像
-    const iconImage = iconElement.querySelector('img');
-    
-    if (iconImage) {
-        const animationImage = document.createElement('img');
-        animationImage.src = iconImage.src;
-        animationImage.alt = iconImage.alt;
         
-        animationElement.appendChild(animationImage);
+        // 监听菜单关闭事件
+        document.addEventListener('menu-closing', (e) => {
+            const menuId = e.detail.menuId;
+            const menuElement = document.getElementById(menuId);
+            
+            if (menuElement) {
+                // 添加关闭动画
+                menuElement.classList.add('closing');
+                
+                // 动画结束后移除菜单
+                menuElement.addEventListener('animationend', () => {
+                    menuElement.remove();
+                }, { once: true });
+            }
+        });
+    },
+    
+    // 初始化深色模式过渡
+    _initDarkModeTransition: function() {
+        // 监听深色模式切换事件
+        document.addEventListener('dark-mode-toggle', (e) => {
+            const isDarkMode = e.detail.isDarkMode;
+            
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            } else {
+                document.body.classList.remove('dark-mode');
+            }
+        });
+    },
+    
+    // 设置亮度
+    setBrightness: function(value) {
+        const overlay = document.getElementById('brightness-overlay');
+        if (overlay) {
+            // 将亮度值转换为背景颜色透明度
+            // 亮度值越低，透明度越高（越暗）
+            const alpha = (100 - value) / 100 * 0.7; // 最大暗化70%
+            overlay.style.backgroundColor = `rgba(0, 0, 0, ${alpha})`;
+        }
+    },
+    
+    // 添加窗口打开动画
+    addWindowOpenAnimation: function(windowElement) {
+        if (windowElement) {
+            // 添加打开动画
+            windowElement.style.animation = 'windowOpen var(--window-animation-speed) var(--animation-easing)';
+            
+            // 动画结束后清除动画属性
+            windowElement.addEventListener('animationend', () => {
+                windowElement.style.animation = '';
+            }, { once: true });
+        }
+    },
+    
+    // 添加窗口关闭动画
+    addWindowCloseAnimation: function(windowElement, callback) {
+        if (windowElement) {
+            // 添加关闭动画
+            windowElement.classList.add('closing');
+            
+            // 动画结束后执行回调
+            windowElement.addEventListener('animationend', () => {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }, { once: true });
+        }
+    },
+    
+    // 添加通知动画
+    addNotificationAnimation: function(notificationElement) {
+        if (notificationElement) {
+            // 添加打开动画
+            notificationElement.style.animation = 'notificationSlideIn 0.3s ease';
+            
+            // 动画结束后清除动画属性
+            notificationElement.addEventListener('animationend', () => {
+                notificationElement.style.animation = '';
+            }, { once: true });
+        }
+    },
+    
+    // 添加通知关闭动画
+    addNotificationCloseAnimation: function(notificationElement, callback) {
+        if (notificationElement) {
+            // 添加关闭动画
+            notificationElement.classList.add('closing');
+            
+            // 动画结束后执行回调
+            notificationElement.addEventListener('animationend', () => {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }, { once: true });
+        }
+    },
+    
+    // 添加对话框动画
+    addDialogAnimation: function(dialogElement) {
+        if (dialogElement) {
+            // 添加打开动画
+            dialogElement.style.animation = 'dialogOpen 0.2s ease';
+            
+            // 动画结束后清除动画属性
+            dialogElement.addEventListener('animationend', () => {
+                dialogElement.style.animation = '';
+            }, { once: true });
+        }
+    },
+    
+    // 添加对话框关闭动画
+    addDialogCloseAnimation: function(dialogElement, callback) {
+        if (dialogElement) {
+            // 添加关闭动画
+            dialogElement.classList.add('closing');
+            
+            // 动画结束后执行回调
+            dialogElement.addEventListener('animationend', () => {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }, { once: true });
+        }
+    },
+    
+    // 添加启动台打开动画
+    addLaunchpadOpenAnimation: function() {
+        const launchpad = document.getElementById('launchpad');
+        if (launchpad) {
+            // 显示启动台
+            launchpad.classList.remove('hidden');
+            
+            // 添加打开动画
+            launchpad.style.animation = 'launchpadFadeIn 0.3s ease';
+            
+            // 动画结束后清除动画属性
+            launchpad.addEventListener('animationend', () => {
+                launchpad.style.animation = '';
+            }, { once: true });
+            
+            // 为应用图标添加动画
+            const apps = launchpad.querySelectorAll('.launchpad-app');
+            apps.forEach((app, index) => {
+                app.style.animationDelay = `${0.03 * index}s`;
+            });
+        }
+    },
+    
+    // 添加启动台关闭动画
+    addLaunchpadCloseAnimation: function(callback) {
+        const launchpad = document.getElementById('launchpad');
+        if (launchpad) {
+            // 添加关闭动画
+            launchpad.style.animation = 'launchpadFadeIn 0.3s ease reverse';
+            
+            // 动画结束后执行回调
+            launchpad.addEventListener('animationend', () => {
+                launchpad.classList.add('hidden');
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }, { once: true });
+        }
     }
+};
+
+// 初始化动画管理器
+function initAnimations() {
+    animationManager.init();
     
-    // 添加到文档
-    document.body.appendChild(animationElement);
-    
-    // 触发动画
-    setTimeout(() => {
-        animationElement.classList.add('app-launching');
-    }, 10);
-    
-    // 动画结束后移除元素
-    setTimeout(() => {
-        document.body.removeChild(animationElement);
-    }, 500);
+    // 导出动画管理器到全局
+    window.animationManager = animationManager;
 }
 
-// 导出函数供其他模块使用
-window.hideAllDropdowns = hideAllDropdowns;
-window.bringWindowToFront = bringWindowToFront;
-window.createAppLaunchAnimation = createAppLaunchAnimation;
+// 当文档加载完成时初始化动画管理器
+document.addEventListener('DOMContentLoaded', () => {
+    initAnimations();
+});

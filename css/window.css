@@ -1,0 +1,348 @@
+/* macOS Monterey 窗口样式 */
+
+/* 窗口容器 */
+.window {
+    position: absolute;
+    background-color: var(--window-background);
+    border-radius: 10px;
+    box-shadow: 0 5px 30px var(--shadow);
+    overflow: hidden;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    pointer-events: auto;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    min-width: 400px;
+    min-height: 300px;
+}
+
+/* 聚焦窗口 */
+.window.focused {
+    box-shadow: 0 5px 40px var(--shadow);
+}
+
+/* 最小化窗口 */
+.window.minimized {
+    display: none;
+}
+
+/* 最大化窗口 */
+.window.maximized {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* 窗口标题栏 */
+.window-titlebar {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    -webkit-app-region: drag;
+    cursor: default;
+}
+
+/* 窗口控制按钮容器 */
+.window-titlebar-controls {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+    -webkit-app-region: no-drag;
+}
+
+/* 窗口控制按钮 */
+.window-control {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.1s ease;
+}
+
+/* 关闭按钮 */
+.window-control.close {
+    background-color: #ff5f57;
+}
+
+.window-control.close:hover::before,
+.window-control.close:hover::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 5.5px;
+    left: 2px;
+}
+
+.window-control.close:hover::before {
+    transform: rotate(45deg);
+}
+
+.window-control.close:hover::after {
+    transform: rotate(-45deg);
+}
+
+/* 最小化按钮 */
+.window-control.minimize {
+    background-color: #ffbd2e;
+}
+
+.window-control.minimize:hover::before {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 5.5px;
+    left: 2px;
+}
+
+/* 最大化按钮 */
+.window-control.maximize {
+    background-color: #28c940;
+}
+
+.window-control.maximize:hover::before {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    top: 2px;
+    left: 2px;
+    border-radius: 1px;
+}
+
+/* 禁用的控制按钮 */
+.window-control.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* 窗口标题 */
+.window-title {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-app-region: drag;
+}
+
+/* 窗口标题栏右侧空白区域 */
+.window-titlebar-spacer {
+    width: 70px;
+    -webkit-app-region: drag;
+}
+
+/* 窗口内容区域 */
+.window-content {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+    background-color: var(--window-background);
+}
+
+/* 窗口调整大小的手柄 */
+.window-resize-handle {
+    position: absolute;
+    z-index: 1;
+}
+
+.window-resize-handle.top {
+    top: 0;
+    left: 10px;
+    right: 10px;
+    height: 5px;
+    cursor: ns-resize;
+}
+
+.window-resize-handle.right {
+    top: 10px;
+    right: 0;
+    bottom: 10px;
+    width: 5px;
+    cursor: ew-resize;
+}
+
+.window-resize-handle.bottom {
+    bottom: 0;
+    left: 10px;
+    right: 10px;
+    height: 5px;
+    cursor: ns-resize;
+}
+
+.window-resize-handle.left {
+    top: 10px;
+    left: 0;
+    bottom: 10px;
+    width: 5px;
+    cursor: ew-resize;
+}
+
+.window-resize-handle.top-left {
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nwse-resize;
+}
+
+.window-resize-handle.top-right {
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nesw-resize;
+}
+
+.window-resize-handle.bottom-left {
+    bottom: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nesw-resize;
+}
+
+.window-resize-handle.bottom-right {
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    cursor: nwse-resize;
+}
+
+/* 窗口动画 */
+@keyframes windowOpen {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.window {
+    animation: windowOpen 0.2s ease forwards;
+}
+
+/* 窗口工具栏 */
+.window-toolbar {
+    height: 36px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.dark-mode .window-toolbar {
+    background-color: rgba(50, 50, 50, 0.8);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 工具栏按钮 */
+.toolbar-button {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 5px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.toolbar-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .toolbar-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.toolbar-button.active {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .toolbar-button.active {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 工具栏分组 */
+.toolbar-group {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+/* 工具栏分隔线 */
+.toolbar-divider {
+    width: 1px;
+    height: 20px;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin: 0 10px;
+}
+
+.dark-mode .toolbar-divider {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 窗口侧边栏 */
+.window-sidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: rgba(240, 240, 240, 0.8);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.dark-mode .window-sidebar {
+    background-color: rgba(50, 50, 50, 0.8);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 窗口主内容区域（带侧边栏） */
+.window-main-content {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+}
+
+/* 窗口底部状态栏 */
+.window-statusbar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 12px;
+    background-color: rgba(240, 240, 240, 0.8);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .window-statusbar {
+    background-color: rgba(50, 50, 50, 0.8);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}

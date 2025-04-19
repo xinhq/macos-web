@@ -1,282 +1,117 @@
-/* desktop.css - 桌面环境基础样式 */
-
-/* 桌面背景 */
-.desktop-screen {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-}
-
-.desktop-background {
-    position: absolute;
+/* 桌面样式 */
+#desktop {
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: url('../img/wallpapers/monterey.jpg');
+    background-image: url('https://images.unsplash.com/photo-1616849813254-6e9b6f8c3db5?q=80&w=1920');
     background-size: cover;
     background-position: center;
     z-index: -1;
-    transition: background-image var(--transition-slow);
+    overflow: hidden;
 }
 
-/* 桌面图标区域 */
-.desktop-icons {
-    position: absolute;
-    top: calc(var(--menu-bar-height) + 10px);
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 15px;
-    z-index: 10;
-}
-
+/* 桌面图标 */
 .desktop-icon {
+    position: absolute;
+    width: 80px;
+    height: 90px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80px;
-    cursor: default;
+    cursor: pointer;
+    transition: all 0.1s ease;
 }
 
 .desktop-icon-img {
     width: 60px;
     height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-bottom: 5px;
-    transition: transform var(--transition-fast);
 }
 
-.desktop-icon:hover .desktop-icon-img {
-    transform: scale(1.05);
+.desktop-icon-img i {
+    font-size: 48px;
+    color: white;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
 }
 
 .desktop-icon-name {
     color: white;
     font-size: 12px;
     text-align: center;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
     background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
     padding: 2px 6px;
-    max-width: 100%;
+    border-radius: 4px;
+    max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-/* 上下文菜单 */
+.desktop-icon:hover {
+    transform: scale(1.05);
+}
+
+.desktop-icon.selected .desktop-icon-name {
+    background-color: rgba(0, 122, 255, 0.7);
+}
+
+/* 右键菜单 */
 .context-menu {
-    position: fixed;
-    width: 200px;
-    background-color: var(--macos-menu-bg);
+    position: absolute;
+    min-width: 200px;
+    background-color: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: 10px;
-    box-shadow: var(--shadow-medium);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     z-index: 1000;
-    opacity: 0;
-    visibility: hidden;
-    transform: scale(0.95);
-    transform-origin: top left;
-    transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
-}
-
-.context-menu.show {
-    opacity: 1;
-    visibility: visible;
-    transform: scale(1);
+    animation: fadeIn 0.1s ease forwards;
 }
 
 .context-menu-item {
     padding: 8px 15px;
     cursor: pointer;
-    transition: background-color var(--transition-fast);
     font-size: 13px;
+    color: var(--text);
+    transition: background-color 0.1s ease;
 }
 
 .context-menu-item:hover {
-    background-color: var(--macos-blue);
+    background-color: var(--accent-color);
     color: white;
 }
 
-.context-menu-divider {
+.context-menu-separator {
     height: 1px;
-    background-color: var(--macos-border);
+    background-color: rgba(128, 128, 128, 0.2);
     margin: 5px 0;
 }
 
-/* 壁纸设置面板 */
-.wallpaper-panel {
+/* 亮度调整覆盖层 */
+.brightness-overlay {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0.9);
-    width: 700px;
-    max-width: 90vw;
-    max-height: 80vh;
-    background-color: var(--macos-window-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: var(--window-border-radius);
-    box-shadow: var(--shadow-large);
-    z-index: 900;
-    display: flex;
-    flex-direction: column;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity var(--transition-normal), transform var(--transition-normal), visibility var(--transition-normal);
-}
-
-.wallpaper-panel.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translate(-50%, -50%) scale(1);
-}
-
-.panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--macos-border);
-}
-
-.panel-header h2 {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--macos-text);
-}
-
-.close-button {
-    font-size: 24px;
-    color: var(--macos-secondary-text);
-    transition: color var(--transition-fast);
-}
-
-.close-button:hover {
-    color: var(--macos-text);
-}
-
-.wallpaper-categories {
-    display: flex;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--macos-border);
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.wallpaper-categories::-webkit-scrollbar {
-    display: none;
-}
-
-.category {
-    padding: 8px 15px;
-    margin-right: 10px;
-    border-radius: 15px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color var(--transition-fast);
-    white-space: nowrap;
-}
-
-.category:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-}
-
-.category.active {
-    background-color: var(--macos-blue);
-    color: white;
-}
-
-.wallpaper-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 15px;
-    padding: 20px;
-    overflow-y: auto;
-    max-height: 400px;
-}
-
-.wallpaper-item {
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: transform var(--transition-fast);
-    position: relative;
-}
-
-.wallpaper-item:hover {
-    transform: scale(1.05);
-}
-
-.wallpaper-item.active::after {
-    content: '';
-    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    border: 3px solid var(--macos-blue);
-    border-radius: 8px;
-    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0);
+    pointer-events: none;
+    z-index: 9999;
+    transition: background-color 0.3s ease;
 }
 
-.wallpaper-item img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-}
-
-.wallpaper-actions {
-    display: flex;
-    justify-content: flex-end;
-    padding: 15px 20px;
-    border-top: 1px solid var(--macos-border);
-}
-
-.upload-button, .apply-button {
-    padding: 8px 15px;
-    border-radius: 5px;
-    font-size: 14px;
-    margin-left: 10px;
-    cursor: pointer;
-}
-
-.upload-button {
-    background-color: transparent;
-    border: 1px solid var(--macos-blue);
-    color: var(--macos-blue);
-    transition: background-color var(--transition-fast);
-}
-
-.upload-button:hover {
-    background-color: rgba(0, 113, 227, 0.1);
-}
-
-.apply-button {
-    background-color: var(--macos-blue);
-    color: white;
-    transition: background-color var(--transition-fast);
-}
-
-.apply-button:hover {
-    background-color: var(--macos-light-blue);
-}
-
-/* 响应式设计 */
-@media only screen and (max-width: 768px) {
-    .wallpaper-grid {
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+/* 动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
     }
-    
-    .desktop-icon {
-        width: 70px;
-    }
-    
-    .desktop-icon-img {
-        width: 50px;
-        height: 50px;
+    to {
+        opacity: 1;
     }
 }

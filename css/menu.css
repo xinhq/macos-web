@@ -1,0 +1,320 @@
+/* macOS Monterey 菜单样式 */
+
+/* 基础菜单容器 */
+.menu {
+    position: absolute;
+    min-width: 200px;
+    background-color: var(--menu-background);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow);
+    z-index: 1000;
+    animation: scaleUp 0.1s ease forwards;
+    transform-origin: top center;
+    overflow: hidden;
+}
+
+/* 菜单项 */
+.menu-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    transition: background-color 0.1s ease;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.menu-item:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.menu-item.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.menu-item.disabled:hover {
+    background-color: transparent;
+    color: var(--text);
+}
+
+/* 菜单分隔线 */
+.menu-divider {
+    height: 1px;
+    background-color: rgba(128, 128, 128, 0.2);
+    margin: 5px 0;
+}
+
+/* 菜单图标 */
+.menu-item-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 菜单快捷键 */
+.menu-item-shortcut {
+    margin-left: auto;
+    font-size: 11px;
+    opacity: 0.7;
+    padding-left: 20px;
+}
+
+/* 子菜单指示器 */
+.menu-item-submenu {
+    position: relative;
+}
+
+.menu-item-submenu::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 4px solid var(--text);
+}
+
+.menu-item-submenu:hover::after {
+    border-left-color: white;
+}
+
+/* 子菜单容器 */
+.submenu {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    min-width: 200px;
+    background-color: var(--menu-background);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow);
+    z-index: 1001;
+    display: none;
+    animation: scaleUp 0.1s ease forwards;
+    transform-origin: left center;
+}
+
+.menu-item-submenu:hover .submenu {
+    display: block;
+}
+
+/* 菜单标题 */
+.menu-title {
+    padding: 8px 15px;
+    font-size: 13px;
+    font-weight: bold;
+    color: var(--text);
+    opacity: 0.7;
+    cursor: default;
+}
+
+/* 菜单复选框和单选按钮 */
+.menu-item-checkbox, .menu-item-radio {
+    position: relative;
+    padding-left: 30px;
+}
+
+.menu-item-checkbox::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--text);
+    border-radius: 2px;
+}
+
+.menu-item-checkbox.checked::before {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.menu-item-checkbox.checked::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-60%) rotate(45deg);
+    width: 3px;
+    height: 6px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+}
+
+.menu-item-radio::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border: 1px solid var(--text);
+    border-radius: 50%;
+}
+
+.menu-item-radio.checked::after {
+    content: '';
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent-color);
+    border-radius: 50%;
+}
+
+/* 上下文菜单（右键菜单） */
+.context-menu {
+    position: fixed;
+    min-width: 200px;
+    background-color: var(--menu-background);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow);
+    z-index: 2000;
+    animation: scaleUp 0.1s ease forwards;
+    display: none;
+}
+
+.context-menu.show {
+    display: block;
+}
+
+/* 菜单动画 */
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes scaleDown {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+}
+
+/* 顶部菜单栏下拉菜单 */
+.dropdown-menu {
+    position: absolute;
+    top: 25px;
+    min-width: 200px;
+    background-color: var(--menu-background);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow);
+    z-index: 1001;
+    display: none;
+    animation: scaleUp 0.1s ease forwards;
+    transform-origin: top center;
+}
+
+.dropdown-menu.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text);
+    transition: background-color 0.1s ease;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-item:hover {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: rgba(128, 128, 128, 0.2);
+    margin: 5px 0;
+}
+
+.dropdown-item .shortcut {
+    margin-left: auto;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
+/* 苹果菜单特殊样式 */
+.apple-dropdown {
+    left: 10px;
+}
+
+/* 应用菜单特殊样式 */
+.app-dropdown {
+    left: 50px;
+}
+
+/* 工具提示菜单 */
+.tooltip-menu {
+    position: absolute;
+    background-color: rgba(50, 50, 50, 0.9);
+    color: white;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    z-index: 1002;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
+}
+
+.tooltip-menu.show {
+    opacity: 1;
+}
+
+/* Dock项目提示 */
+.dock-tooltip {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--menu-background);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    box-shadow: 0 2px 5px var(--shadow);
+}
+
+.dock-item:hover .dock-tooltip {
+    opacity: 1;
+}

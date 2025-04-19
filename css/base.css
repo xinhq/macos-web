@@ -1,185 +1,120 @@
-/* base.css - 基础样式和变量定义 */
-
-/* 定义CSS变量 */
 :root {
-    /* 颜色变量 - 浅色模式 */
-    --macos-blue: #0071e3;
-    --macos-light-blue: #147ce5;
-    --macos-dark-blue: #0068d0;
-    --macos-background: #f5f5f7;
-    --macos-text: #1d1d1f;
-    --macos-secondary-text: #86868b;
-    --macos-border: rgba(0, 0, 0, 0.1);
-    --macos-window-bg: rgba(255, 255, 255, 0.8);
-    --macos-sidebar-bg: rgba(245, 245, 247, 0.8);
-    --macos-menu-bg: rgba(255, 255, 255, 0.8);
-    --macos-dock-bg: rgba(255, 255, 255, 0.2);
-    --macos-control-center-bg: rgba(255, 255, 255, 0.7);
-    
-    /* 颜色变量 - 深色模式 */
-    --macos-dark-background: #1e1e1e;
-    --macos-dark-text: #f5f5f7;
-    --macos-dark-secondary-text: #a1a1a6;
-    --macos-dark-border: rgba(255, 255, 255, 0.1);
-    --macos-dark-window-bg: rgba(40, 40, 40, 0.8);
-    --macos-dark-sidebar-bg: rgba(50, 50, 50, 0.8);
-    --macos-dark-menu-bg: rgba(40, 40, 40, 0.8);
-    --macos-dark-dock-bg: rgba(40, 40, 40, 0.2);
-    --macos-dark-control-center-bg: rgba(40, 40, 40, 0.7);
-    
-    /* 尺寸变量 */
-    --menu-bar-height: 24px;
-    --dock-height: 60px;
-    --dock-padding: 6px;
-    --window-border-radius: 10px;
-    --control-border-radius: 6px;
-    
-    /* 字体变量 */
-    --system-font: -apple-system, BlinkMacSystemFont, 'SF Pro', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    --monospace-font: 'SF Mono', Monaco, Consolas, 'Courier New', monospace;
-    
-    /* 动画变量 */
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.25s ease;
-    --transition-slow: 0.4s ease;
-    
-    /* 阴影变量 */
-    --shadow-small: 0 2px 5px rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 5px 15px rgba(0, 0, 0, 0.15);
-    --shadow-large: 0 10px 30px rgba(0, 0, 0, 0.2);
+    --background: #ffffff;
+    --text: #333333;
+    --menu-background: rgba(255, 255, 255, 0.8);
+    --window-background: rgba(255, 255, 255, 0.8);
+    --accent-color: #0070f3;
+    --shadow: rgba(0, 0, 0, 0.2);
+    --border: rgba(0, 0, 0, 0.1);
+    --dock-background: rgba(255, 255, 255, 0.2);
 }
 
-/* 深色模式媒体查询 */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --macos-background: var(--macos-dark-background);
-        --macos-text: var(--macos-dark-text);
-        --macos-secondary-text: var(--macos-dark-secondary-text);
-        --macos-border: var(--macos-dark-border);
-        --macos-window-bg: var(--macos-dark-window-bg);
-        --macos-sidebar-bg: var(--macos-dark-sidebar-bg);
-        --macos-menu-bg: var(--macos-dark-menu-bg);
-        --macos-dock-bg: var(--macos-dark-dock-bg);
-        --macos-control-center-bg: var(--macos-dark-control-center-bg);
-    }
+[data-theme="dark"] {
+    --background: #1e1e1e;
+    --text: #f0f0f0;
+    --menu-background: rgba(50, 50, 50, 0.8);
+    --window-background: rgba(50, 50, 50, 0.8);
+    --accent-color: #0a84ff;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --border: rgba(255, 255, 255, 0.1);
+    --dock-background: rgba(50, 50, 50, 0.3);
 }
 
-/* 手动深色模式类 */
-.dark-mode {
-    --macos-background: var(--macos-dark-background);
-    --macos-text: var(--macos-dark-text);
-    --macos-secondary-text: var(--macos-dark-secondary-text);
-    --macos-border: var(--macos-dark-border);
-    --macos-window-bg: var(--macos-dark-window-bg);
-    --macos-sidebar-bg: var(--macos-dark-sidebar-bg);
-    --macos-menu-bg: var(--macos-dark-menu-bg);
-    --macos-dock-bg: var(--macos-dark-dock-bg);
-    --macos-control-center-bg: var(--macos-dark-control-center-bg);
-}
-
-/* 重置样式 */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-html, body {
-    width: 100%;
-    height: 100%;
-    font-family: var(--system-font);
-    font-size: 14px;
-    color: var(--macos-text);
-    background-color: var(--macos-background);
-    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     user-select: none;
 }
 
-/* 通用样式 */
-button {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-family: var(--system-font);
-    color: var(--macos-text);
+body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color: var(--background);
+    color: var(--text);
+    position: relative;
 }
 
-button:focus {
-    outline: none;
+/* 滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
 }
 
-input {
-    font-family: var(--system-font);
-    border: none;
-    background: none;
-    color: var(--macos-text);
+::-webkit-scrollbar-track {
+    background: transparent;
 }
 
-input:focus {
-    outline: none;
+::-webkit-scrollbar-thumb {
+    background: rgba(128, 128, 128, 0.5);
+    border-radius: 4px;
 }
 
-/* 毛玻璃效果 */
-.blur-effect {
-    background-color: var(--macos-window-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-}
-
-/* 隐藏滚动条但保留功能 */
-.hide-scrollbar {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(128, 128, 128, 0.7);
 }
 
 /* 通用动画 */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes scaleIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-@keyframes slideInUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes slideInDown {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* 响应式设计断点 */
-/* 小屏幕设备 (手机, 600px 及以下) */
-@media only screen and (max-width: 600px) {
-    :root {
-        --dock-height: 50px;
-        --menu-bar-height: 30px;
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }
 
-/* 中等屏幕设备 (平板, 600px 到 992px) */
-@media only screen and (min-width: 600px) and (max-width: 992px) {
-    :root {
-        --dock-height: 55px;
-        --menu-bar-height: 26px;
+@keyframes scaleUp {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
     }
 }
 
-/* 大屏幕设备 (笔记本/台式机, 992px 及以上) */
-@media only screen and (min-width: 992px) {
-    :root {
-        --dock-height: 60px;
-        --menu-bar-height: 24px;
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* 通用类 */
+.hidden {
+    display: none !important;
+}
+
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.blur-background {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
     }
 }

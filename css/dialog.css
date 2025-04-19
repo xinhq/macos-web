@@ -1,0 +1,606 @@
+/* macOS Monterey 对话框和提示框样式 */
+
+/* 对话框背景遮罩 */
+.dialog-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.dialog-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 基础对话框容器 */
+.dialog {
+    background-color: var(--window-background);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px var(--shadow);
+    overflow: hidden;
+    width: 400px;
+    max-width: 90%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: dialogOpen 0.3s ease forwards;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+/* 对话框头部 */
+.dialog-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+}
+
+.dark-mode .dialog-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dialog-title {
+    font-size: 15px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.dialog-close {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ff5f57;
+    position: relative;
+    cursor: pointer;
+}
+
+.dialog-close::before,
+.dialog-close::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.5);
+    top: 9.5px;
+    left: 5px;
+    opacity: 0;
+    transition: opacity 0.1s ease;
+}
+
+.dialog-close:hover::before,
+.dialog-close:hover::after {
+    opacity: 1;
+}
+
+.dialog-close::before {
+    transform: rotate(45deg);
+}
+
+.dialog-close::after {
+    transform: rotate(-45deg);
+}
+
+/* 对话框内容 */
+.dialog-content {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* 对话框图标 */
+.dialog-icon {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* 对话框消息 */
+.dialog-message {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 15px;
+}
+
+/* 对话框底部 */
+.dialog-footer {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.dark-mode .dialog-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 警告对话框 */
+.dialog-warning .dialog-icon {
+    color: #ffcc00;
+}
+
+/* 错误对话框 */
+.dialog-error .dialog-icon {
+    color: #ff3b30;
+}
+
+/* 成功对话框 */
+.dialog-success .dialog-icon {
+    color: #34c759;
+}
+
+/* 信息对话框 */
+.dialog-info .dialog-icon {
+    color: var(--accent-color);
+}
+
+/* 对话框动画 */
+@keyframes dialogOpen {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes dialogClose {
+    from {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+    }
+}
+
+.dialog.closing {
+    animation: dialogClose 0.2s ease forwards;
+}
+
+/* 提示框 */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(50, 50, 50, 0.9);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 9500;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: auto;
+}
+
+.toast.hide {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+}
+
+/* 通知 */
+.notification {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    width: 300px;
+    background-color: var(--window-background);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow);
+    overflow: hidden;
+    z-index: 9500;
+    animation: notificationSlideIn 0.3s ease forwards;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.notification.closing {
+    animation: notificationSlideOut 0.3s ease forwards;
+}
+
+.notification-header {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .notification-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.notification-app-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+.notification-app-name {
+    font-size: 13px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.notification-close {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+}
+
+.notification-close::before,
+.notification-close::after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 1px;
+    background-color: var(--text);
+    top: 7.5px;
+    left: 3px;
+}
+
+.notification-close::before {
+    transform: rotate(45deg);
+}
+
+.notification-close::after {
+    transform: rotate(-45deg);
+}
+
+.notification-content {
+    padding: 15px;
+}
+
+.notification-title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.notification-message {
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.notification-actions {
+    padding: 0 15px 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+@keyframes notificationSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes notificationSlideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* 警告提示 */
+.alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--window-background);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px var(--shadow);
+    padding: 20px;
+    width: 400px;
+    max-width: 90%;
+    z-index: 9500;
+    display: flex;
+    flex-direction: column;
+    animation: alertOpen 0.3s ease forwards;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.alert.closing {
+    animation: alertClose 0.2s ease forwards;
+}
+
+.alert-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.alert-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert-title {
+    font-size: 15px;
+    font-weight: 500;
+    flex: 1;
+}
+
+.alert-message {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+.alert-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+@keyframes alertOpen {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes alertClose {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
+    }
+}
+
+/* 加载指示器 */
+.loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9600;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 0, 0, 0.1);
+    border-top-color: var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.dark-mode .loading-spinner {
+    border-color: rgba(255, 255, 255, 0.1);
+    border-top-color: var(--accent-color);
+}
+
+.loading-text {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text);
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 进度对话框 */
+.progress-dialog {
+    width: 400px;
+    max-width: 90%;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 6px;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 15px 0;
+}
+
+.dark-mode .progress-bar-container {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background-color: var(--accent-color);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.7;
+    text-align: center;
+}
+
+/* 表单对话框 */
+.form-dialog {
+    width: 500px;
+    max-width: 90%;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.form-input {
+    width: 100%;
+}
+
+.form-help {
+    font-size: 12px;
+    color: var(--text);
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+/* 确认对话框 */
+.confirm-dialog {
+    width: 400px;
+    max-width: 90%;
+}
+
+/* 颜色选择器对话框 */
+.color-picker-dialog {
+    width: 300px;
+    max-width: 90%;
+}
+
+.color-picker-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.color-preview {
+    width: 100%;
+    height: 40px;
+    border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .color-preview {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.color-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.color-slider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.color-slider-label {
+    width: 15px;
+    text-align: center;
+    font-size: 13px;
+}
+
+.color-slider-input {
+    flex: 1;
+}
+
+.color-slider-value {
+    width: 40px;
+    text-align: right;
+    font-size: 13px;
+}
+
+/* 文件选择对话框 */
+.file-dialog {
+    width: 600px;
+    max-width: 90%;
+    height: 400px;
+    max-height: 90vh;
+}
+
+.file-dialog-sidebar {
+    width: 200px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    overflow-y: auto;
+}
+
+.dark-mode .file-dialog-sidebar {
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.file-dialog-content {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.file-dialog-footer {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dark-mode .file-dialog-footer {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.file-name-input {
+    width: 300px;
+}
+
+.file-dialog-actions {
+    display: flex;
+    gap: 10px;
+}

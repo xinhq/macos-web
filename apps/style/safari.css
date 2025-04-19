@@ -1,0 +1,419 @@
+/* macOS Monterey Safari样式 */
+
+.safari-window {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+}
+
+.dark-mode .safari-window {
+    background-color: #1e1e1e;
+}
+
+.safari-toolbar {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 10px;
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dark-mode .safari-toolbar {
+    background-color: #2d2d2d;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.safari-toolbar-buttons {
+    display: flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.safari-toolbar-button {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #666;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.dark-mode .safari-toolbar-button {
+    color: #aaa;
+}
+
+.safari-toolbar-button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .safari-toolbar-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.safari-toolbar-button.disabled {
+    color: #ccc;
+    cursor: default;
+}
+
+.dark-mode .safari-toolbar-button.disabled {
+    color: #555;
+}
+
+.safari-toolbar-button.disabled:hover {
+    background-color: transparent;
+}
+
+.safari-address-bar {
+    flex: 1;
+    height: 28px;
+    margin: 0 10px;
+    position: relative;
+}
+
+.safari-address-bar input {
+    width: 100%;
+    height: 100%;
+    padding: 0 10px;
+    border: none;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+    color: #333;
+    font-size: 13px;
+    outline: none;
+    transition: background-color 0.2s ease;
+}
+
+.dark-mode .safari-address-bar input {
+    background-color: #3a3a3a;
+    color: #eee;
+}
+
+.safari-address-bar input:focus {
+    background-color: #d5d5d5;
+}
+
+.dark-mode .safari-address-bar input:focus {
+    background-color: #444;
+}
+
+.safari-toolbar-actions {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.safari-content {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.safari-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.safari-tabs-container {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 0 10px;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.dark-mode .safari-tabs-container {
+    background-color: #2a2a2a;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.safari-tab {
+    display: flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    margin-right: 5px;
+    border-radius: 4px 4px 0 0;
+    background-color: #e5e5e5;
+    color: #333;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+    max-width: 200px;
+    min-width: 100px;
+}
+
+.dark-mode .safari-tab {
+    background-color: #333;
+    color: #eee;
+}
+
+.safari-tab.active {
+    background-color: #fff;
+}
+
+.dark-mode .safari-tab.active {
+    background-color: #1e1e1e;
+}
+
+.safari-tab-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.safari-tab-close {
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-left: 5px;
+    color: #999;
+    font-size: 10px;
+}
+
+.safari-tab-close:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #666;
+}
+
+.dark-mode .safari-tab-close:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #ccc;
+}
+
+.safari-new-tab {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    color: #666;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.dark-mode .safari-new-tab {
+    color: #aaa;
+}
+
+.safari-new-tab:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .safari-new-tab:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.safari-loading-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background-color: #0066cc;
+    transition: width 0.2s ease;
+}
+
+.safari-bookmark-bar {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0 10px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e0e0e0;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.dark-mode .safari-bookmark-bar {
+    background-color: #252525;
+    border-bottom: 1px solid #3a3a3a;
+}
+
+.safari-bookmark {
+    display: flex;
+    align-items: center;
+    height: 24px;
+    padding: 0 10px;
+    margin-right: 10px;
+    border-radius: 4px;
+    color: #333;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.dark-mode .safari-bookmark {
+    color: #eee;
+}
+
+.safari-bookmark:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.dark-mode .safari-bookmark:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.safari-bookmark-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.safari-bookmark-icon img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
+.safari-start-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 50px 20px;
+    background-color: #f5f5f5;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.dark-mode .safari-start-page {
+    background-color: #1e1e1e;
+}
+
+.safari-search-container {
+    width: 100%;
+    max-width: 600px;
+    margin-bottom: 30px;
+}
+
+.safari-search-box {
+    width: 100%;
+    height: 40px;
+    padding: 0 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    outline: none;
+}
+
+.dark-mode .safari-search-box {
+    background-color: #2d2d2d;
+    color: #eee;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.safari-favorites {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+}
+
+.safari-favorite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+}
+
+.safari-favorite-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.dark-mode .safari-favorite-icon {
+    background-color: #2d2d2d;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.safari-favorite-icon img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.safari-favorite-title {
+    font-size: 12px;
+    color: #333;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dark-mode .safari-favorite-title {
+    color: #eee;
+}
+
+.safari-context-menu {
+    position: absolute;
+    width: 200px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 5px 0;
+    z-index: 1000;
+}
+
+.dark-mode .safari-context-menu {
+    background-color: #2d2d2d;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+.safari-context-menu-item {
+    padding: 8px 15px;
+    font-size: 13px;
+    color: #333;
+    cursor: pointer;
+}
+
+.dark-mode .safari-context-menu-item {
+    color: #eee;
+}
+
+.safari-context-menu-item:hover {
+    background-color: #f0f0f0;
+}
+
+.dark-mode .safari-context-menu-item:hover {
+    background-color: #3a3a3a;
+}
+
+.safari-context-menu-separator {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 5px 0;
+}
+
+.dark-mode .safari-context-menu-separator {
+    background-color: #3a3a3a;
+}

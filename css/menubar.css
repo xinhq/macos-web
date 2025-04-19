@@ -1,51 +1,66 @@
-/* menubar.css - 顶部菜单栏样式 */
-
-/* 菜单栏容器 */
-.menu-bar {
+/* 菜单栏样式 */
+#menubar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--menu-bar-height);
-    background-color: var(--macos-menu-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    height: 25px;
+    background-color: var(--menu-background);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     padding: 0 10px;
     z-index: 1000;
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    font-size: 13px;
+    color: var(--text);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
-/* 苹果菜单按钮 */
-.apple-menu-button {
+/* 左侧菜单 */
+.menubar-left {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.menubar-item {
+    padding: 0 10px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.menubar-item:hover {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.apple-menu {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 20px;
-    height: 20px;
-    margin-right: 15px;
+    height: 100%;
+    padding: 0 10px;
     cursor: pointer;
 }
 
 .apple-logo {
-    width: 16px;
-    height: 16px;
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
+    width: 14px;
+    height: 14px;
 }
 
-.apple-menu-button:hover .apple-logo {
-    opacity: 1;
-}
-
-/* 应用菜单 */
 .app-menu {
     display: flex;
     align-items: center;
     height: 100%;
-    flex-grow: 1;
+}
+
+.app-name {
+    font-weight: bold;
+    padding: 0 10px;
 }
 
 .menu-item {
@@ -53,301 +68,175 @@
     height: 100%;
     display: flex;
     align-items: center;
-    font-size: 13px;
     cursor: pointer;
-    transition: background-color var(--transition-fast);
+    transition: background-color 0.1s ease;
 }
 
 .menu-item:hover {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: rgba(128, 128, 128, 0.2);
 }
 
-.menu-item.active-app-name {
-    font-weight: 600;
-}
-
-/* 右侧状态图标 */
-.status-icons {
+/* 右侧菜单 */
+.menubar-right {
     display: flex;
     align-items: center;
     height: 100%;
 }
 
-.status-item {
+.menubar-icons {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.menubar-icon {
+    width: 20px;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    padding: 0 5px;
+    margin: 0 5px;
+    cursor: pointer;
+    position: relative;
+}
+
+#menubar-time {
+    margin: 0 5px;
     cursor: pointer;
 }
 
-.status-icon {
+/* 菜单图标样式 */
+.battery::before {
+    content: '';
     width: 16px;
-    height: 16px;
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
+    height: 8px;
+    border: 1px solid var(--text);
+    border-radius: 2px;
+    position: relative;
+    display: block;
 }
 
-.status-item:hover .status-icon {
-    opacity: 1;
+.battery::after {
+    content: '';
+    width: 2px;
+    height: 3px;
+    background-color: var(--text);
+    position: absolute;
+    right: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 0 1px 1px 0;
 }
 
-.datetime {
-    display: flex;
-    align-items: center;
-    font-size: 12px;
-    padding: 0 10px;
-    cursor: pointer;
+.wifi::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--text);
+    border-radius: 50%;
+    position: relative;
+    display: block;
+    clip-path: polygon(0% 100%, 100% 100%, 100% 0%);
 }
 
-.menu-time {
-    margin-right: 5px;
+.search::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border: 1px solid var(--text);
+    border-radius: 50%;
+    position: relative;
+    display: block;
 }
 
-/* 下拉菜单 */
+.search::after {
+    content: '';
+    width: 4px;
+    height: 1px;
+    background-color: var(--text);
+    position: absolute;
+    right: 2px;
+    bottom: 4px;
+    transform: rotate(45deg);
+    transform-origin: right;
+}
+
+.control-center::before {
+    content: '';
+    width: 14px;
+    height: 14px;
+    background-color: transparent;
+    position: relative;
+    display: block;
+    border-radius: 2px;
+    border: 1px solid var(--text);
+    overflow: hidden;
+}
+
+.control-center::after {
+    content: '';
+    width: 7px;
+    height: 7px;
+    background-color: var(--text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 1px;
+}
+
+/* 下拉菜单样式 */
 .dropdown-menu {
     position: absolute;
-    background-color: var(--macos-menu-bg);
+    top: 25px;
+    min-width: 200px;
+    background-color: var(--menu-background);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-radius: 5px;
-    box-shadow: var(--shadow-medium);
-    min-width: 200px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px var(--shadow);
     z-index: 1001;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-5px);
-    transition: opacity var(--transition-fast), transform var(--transition-fast), visibility var(--transition-fast);
+    display: none;
+    animation: scaleUp 0.1s ease forwards;
+    transform-origin: top center;
 }
 
 .dropdown-menu.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.apple-dropdown {
-    top: var(--menu-bar-height);
-    left: 10px;
-}
-
-.file-dropdown {
-    top: var(--menu-bar-height);
-    left: 60px;
+    display: block;
 }
 
 .dropdown-item {
     padding: 8px 15px;
-    font-size: 13px;
     cursor: pointer;
-    transition: background-color var(--transition-fast);
+    font-size: 13px;
+    color: var(--text);
+    transition: background-color 0.1s ease;
+    display: flex;
+    align-items: center;
 }
 
 .dropdown-item:hover {
-    background-color: var(--macos-blue);
+    background-color: var(--accent-color);
     color: white;
 }
 
 .dropdown-divider {
     height: 1px;
-    background-color: var(--macos-border);
+    background-color: rgba(128, 128, 128, 0.2);
     margin: 5px 0;
 }
 
-/* 控制中心 */
-.control-center {
-    position: absolute;
-    top: calc(var(--menu-bar-height) + 5px);
-    right: 10px;
-    width: 320px;
-    background-color: var(--macos-control-center-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 10px;
-    box-shadow: var(--shadow-large);
-    z-index: 1001;
-    overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px) scale(0.95);
-    transform-origin: top right;
-    transition: opacity var(--transition-normal), transform var(--transition-normal), visibility var(--transition-normal);
-}
-
-.control-center.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0) scale(1);
-}
-
-.control-center-header {
-    padding: 15px;
-}
-
-.control-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.control-row:last-child {
-    margin-bottom: 0;
-}
-
-.control-group {
-    display: flex;
-    gap: 10px;
-    flex: 1;
-}
-
-.control-group.large {
-    flex: 2;
-}
-
-.control-group.full-width {
-    width: 100%;
-}
-
-.control-item {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 10px;
-    padding: 10px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.control-item.small {
-    padding: 8px;
-    flex-direction: row;
-    align-items: center;
-}
-
-.control-icon {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 5px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.control-item.small .control-icon {
-    margin-bottom: 0;
-    margin-right: 8px;
-}
-
-.control-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.control-label {
-    font-size: 12px;
-    margin-bottom: 2px;
-}
-
-.control-item.small .control-label {
-    margin-bottom: 0;
-}
-
-.control-status {
+.dropdown-item .shortcut {
+    margin-left: auto;
     font-size: 11px;
-    color: var(--macos-secondary-text);
+    opacity: 0.7;
 }
 
-.brightness-slider, .volume-slider {
-    margin-top: 10px;
+/* 苹果菜单特殊样式 */
+.apple-dropdown {
+    left: 10px;
 }
 
-.slider {
-    width: 100%;
-    height: 4px;
-    -webkit-appearance: none;
-    appearance: none;
-    background: rgba(255, 255, 255, 0.3);
-    outline: none;
-    border-radius: 2px;
-}
-
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-}
-
-.slider::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    border: none;
-}
-
-.control-center-footer {
-    padding: 15px;
-    border-top: 1px solid var(--macos-border);
-}
-
-/* 响应式设计 */
-@media only screen and (max-width: 768px) {
-    .menu-bar {
-        padding: 0 5px;
-    }
-    
-    .menu-item {
-        padding: 0 8px;
-        font-size: 12px;
-    }
-    
-    .control-center {
-        width: 300px;
-    }
-}
-
-@media only screen and (max-width: 480px) {
-    .app-menu {
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-    
-    .app-menu::-webkit-scrollbar {
-        display: none;
-    }
-    
-    .menu-item {
-        padding: 0 6px;
-        font-size: 11px;
-    }
-    
-    .status-icons {
-        overflow-x: auto;
-        scrollbar-width: none;
-    }
-    
-    .status-icons::-webkit-scrollbar {
-        display: none;
-    }
-    
-    .control-center {
-        width: 90%;
-        max-width: 300px;
-    }
-    
-    .control-row {
-        flex-direction: column;
-    }
-    
-    .control-group {
-        width: 100%;
-    }
+/* 应用菜单特殊样式 */
+.app-dropdown {
+    left: 50px;
 }

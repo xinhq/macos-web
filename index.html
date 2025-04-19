@@ -3,90 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>macOS 网页版 - 登录</title>
+    <title>macOS Monterey 网页版</title>
+    <meta name="description" content="macOS Monterey 网页版模拟，提供Dock栏、Finder、Launchpad、控制中心等macOS核心功能">
     <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/desktop.css">
+    <link rel="stylesheet" href="css/dock.css">
+    <link rel="stylesheet" href="css/menubar.css">
+    <link rel="stylesheet" href="css/window.css">
+    <link rel="stylesheet" href="css/buttons.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/dialog.css">
+    <link rel="stylesheet" href="css/control-center.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="apps/style/finder.css">
+    <link rel="stylesheet" href="apps/style/launchpad.css">
+    <link rel="stylesheet" href="apps/style/settings.css">
+    <link rel="stylesheet" href="apps/style/safari.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="icon" href="icons/apple-logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="manifest" href="manifest.json">
 </head>
-<body class="login-screen">
-    <!-- 登录背景 -->
-    <div class="login-background"></div>
-    
-    <!-- 登录容器 -->
-    <div class="login-container">
-        <!-- 顶部时间和日期 -->
-        <div class="login-datetime">
-            <div class="login-time" id="login-time">00:00</div>
-            <div class="login-date" id="login-date">星期一, 1月1日</div>
+<body>
+    <!-- 菜单栏 -->
+    <div id="menubar">
+        <div class="menubar-left">
+            <div class="menubar-item apple-menu" id="apple-menu-button">
+                <i class="fab fa-apple"></i>
+            </div>
+            <div class="menubar-item app-menu" id="app-name">Finder</div>
+            <div class="menubar-item">文件</div>
+            <div class="menubar-item">编辑</div>
+            <div class="menubar-item">显示</div>
+            <div class="menubar-item">前往</div>
+            <div class="menubar-item">窗口</div>
+            <div class="menubar-item">帮助</div>
         </div>
-        
-        <!-- 用户信息和登录按钮 -->
-        <div class="login-user-container">
-            <div class="user-avatar">
-                <img src="img/default-avatar.png" alt="用户头像" id="user-avatar">
+        <div class="menubar-right">
+            <div class="menubar-item" id="menubar-battery-icon">
+                <i class="fas fa-battery-three-quarters"></i>
             </div>
-            <div class="user-name" id="user-name">访客用户</div>
-            <div class="password-field">
-                <input type="password" id="password-input" placeholder="输入密码">
+            <div class="menubar-item" id="menubar-wifi-icon">
+                <i class="fas fa-wifi"></i>
             </div>
-            <div class="login-button-container">
-                <button class="login-button" id="login-button">
-                    <span class="arrow-icon">→</span>
-                </button>
+            <div class="menubar-item" id="menubar-bluetooth-icon" class="disabled">
+                <i class="fab fa-bluetooth-b"></i>
             </div>
-            <div class="login-hint" id="login-hint">提示：任意密码均可登录</div>
-        </div>
-        
-        <!-- 底部控制栏 -->
-        <div class="login-footer">
-            <div class="footer-left">
-                <button class="icon-button sleep-button" title="睡眠">
-                    <span class="icon">⏾</span>
-                </button>
-                <button class="icon-button restart-button" title="重新启动">
-                    <span class="icon">⟳</span>
-                </button>
-                <button class="icon-button shutdown-button" title="关机">
-                    <span class="icon">⏻</span>
-                </button>
+            <div class="menubar-item" id="menubar-search-icon">
+                <i class="fas fa-search"></i>
             </div>
-            <div class="footer-right">
-                <button class="text-button accessibility-button" title="辅助功能选项">
-                    <span class="icon">♿</span>
-                </button>
-                <button class="text-button language-button" id="language-button" title="语言选择">
-                    <span class="icon">🌐</span>
-                    <span class="text">简体中文</span>
-                </button>
+            <div class="menubar-item" id="control-center-button">
+                <i class="fas fa-sliders-h"></i>
+            </div>
+            <div class="menubar-item" id="menubar-time">
+                周三 4月16日 07:37
             </div>
         </div>
     </div>
-    
-    <!-- 关于本机对话框 -->
-    <div class="about-dialog" id="about-dialog">
-        <div class="about-dialog-content">
-            <div class="about-header">
-                <img src="icons/system/apple-logo.svg" alt="Apple Logo" class="about-logo">
-                <h2>macOS 网页版</h2>
+
+    <!-- 桌面 -->
+    <div id="desktop"></div>
+
+    <!-- Dock栏 -->
+    <div id="dock">
+        <div class="dock-container">
+            <div class="dock-item" data-app="finder">
+                <i class="fas fa-folder fa-2x"></i>
+                <div class="dock-tooltip">访达</div>
             </div>
-            <div class="about-info">
-                <p>版本 1.0 (基于 macOS Monterey)</p>
-                <p>© 2025 Web OS Project</p>
-                <p>使用HTML, CSS和JavaScript构建</p>
+            <div class="dock-item" data-app="launchpad">
+                <i class="fas fa-rocket fa-2x"></i>
+                <div class="dock-tooltip">启动台</div>
             </div>
-            <button class="about-close-button" id="about-close-button">关闭</button>
+            <div class="dock-item" data-app="safari">
+                <i class="fas fa-compass fa-2x"></i>
+                <div class="dock-tooltip">Safari</div>
+            </div>
+            <div class="dock-item" data-app="mail">
+                <i class="fas fa-envelope fa-2x"></i>
+                <div class="dock-tooltip">邮件</div>
+            </div>
+            <div class="dock-item" data-app="messages">
+                <i class="fas fa-comment fa-2x"></i>
+                <div class="dock-tooltip">信息</div>
+            </div>
+            <div class="dock-item" data-app="maps">
+                <i class="fas fa-map-marked-alt fa-2x"></i>
+                <div class="dock-tooltip">地图</div>
+            </div>
+            <div class="dock-item" data-app="photos">
+                <i class="fas fa-images fa-2x"></i>
+                <div class="dock-tooltip">照片</div>
+            </div>
+            <div class="dock-item" data-app="facetime">
+                <i class="fas fa-video fa-2x"></i>
+                <div class="dock-tooltip">FaceTime</div>
+            </div>
+            <div class="dock-item" data-app="calendar">
+                <i class="fas fa-calendar-alt fa-2x"></i>
+                <div class="dock-tooltip">日历</div>
+            </div>
+            <div class="dock-item" data-app="contacts">
+                <i class="fas fa-address-book fa-2x"></i>
+                <div class="dock-tooltip">通讯录</div>
+            </div>
+            <div class="dock-item" data-app="notes">
+                <i class="fas fa-sticky-note fa-2x"></i>
+                <div class="dock-tooltip">备忘录</div>
+            </div>
+            <div class="dock-separator"></div>
+            <div class="dock-item" data-app="settings">
+                <i class="fas fa-cog fa-2x"></i>
+                <div class="dock-tooltip">系统偏好设置</div>
+            </div>
+            <div class="dock-item" data-app="trash">
+                <i class="fas fa-trash fa-2x"></i>
+                <div class="dock-tooltip">废纸篓</div>
+            </div>
         </div>
     </div>
-    
-    <!-- 语言选择菜单 -->
-    <div class="language-menu" id="language-menu">
-        <ul>
-            <li data-lang="zh-CN" class="selected">简体中文</li>
-            <li data-lang="en-US">English (US)</li>
-            <li data-lang="ja-JP">日本語</li>
-            <li data-lang="ko-KR">한국어</li>
-        </ul>
+
+    <!-- 启动台 -->
+    <div id="launchpad" class="hidden">
+        <div class="launchpad-search">
+            <input type="text" placeholder="搜索">
+        </div>
+        <div class="launchpad-grid">
+            <!-- 应用图标将通过JavaScript动态添加 -->
+        </div>
+        <div class="launchpad-dots">
+            <div class="launchpad-dot active"></div>
+            <div class="launchpad-dot"></div>
+            <div class="launchpad-dot"></div>
+        </div>
     </div>
+
+    <!-- 亮度调整覆盖层 -->
+    <div id="brightness-overlay" class="brightness-overlay"></div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/main.js"></script>
+    <script src="js/window.js"></script>
+    <script src="js/dock.js"></script>
+    <script src="js/menubar.js"></script>
+    <script src="js/control-center.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/system.js"></script>
+    <script src="apps/finder.js"></script>
+    <script src="apps/launchpad.js"></script>
+    <script src="apps/settings.js"></script>
+    <script src="apps/safari.js"></script>
     
-    <script src="js/login.js"></script>
+    <!-- 服务工作线程注册 -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker 注册成功: ', registration.scope);
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker 注册失败: ', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
